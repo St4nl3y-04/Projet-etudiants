@@ -204,5 +204,10 @@ int main (){
             printf("Option invalide, veuillez reessayer.\n");
             break;
         }
+<<<<<<< HEAD
     }while (C != 3);
+=======
+    }while (C != 3);//dfdfdfddg fdfdfd
+    return 0;
+>>>>>>> Ismail's-Branch
 }
