@@ -45,6 +45,22 @@ float calculer_Moyenne(const EtudiantRepere *P) {
     }
     return (MOY) / NBR_NOTES; 
 }
+int calculerAge(const EtudiantRepere* P) {
+    // Récupérer la date actuelle
+    time_t t = time(NULL);
+    struct tm dateActuelle = *localtime(&t);
+    // Extraire l'année, le mois et le jour actuels
+    int anneeActuelle = dateActuelle.tm_year + 1900; // tm_year donne l'année depuis 1900
+    int moisActuel = dateActuelle.tm_mon + 1;        // tm_mon va de 0 à 11
+    int jourActuel = dateActuelle.tm_mday;
+    // Calcul de l'âge
+    int age = anneeActuelle - P->date.annee;
+    // Ajuster si la date d'anniversaire n'est pas encore passée
+    if (P->date.mois > moisActuel || (P->date.mois == moisActuel && P->date.jour > jourActuel)) {
+        age--;
+    }
+    return age;
+}
 EtudiantRepere * Creer_Etudiant(){
     EtudiantRepere *P=(EtudiantRepere*)malloc(sizeof(EtudiantRepere));
     printf("\nEntrez l'identifiant de l'etudiant :");
@@ -102,7 +118,7 @@ EtudiantRepere * Creer_Etudiant(){
     return P;
 }
 void ajouter_Etudiant_liste(Liste* li){
-    EtudiantRepere* P = Creer_Produit();
+    EtudiantRepere* P = Creer_Etudiant();
     if (li->tete == NULL) {// si la liste est vide
         li->tete=P;
         li->queue=P;
@@ -117,30 +133,14 @@ void afficher_liste_Etudiant (Liste* li){
     P= li->tete;
     printf("\nLa liste des étudiants avec leurs details\n:");
     while (P!=NULL){
-        printf("Identifiant: %d\nNom: %s\nPrenom: %s\nAge: %d ans , ne le %d/%d/%d \n---------\n",P->Id, P->nom, P->prenom, P->age, P->date.jour, P->date.mois,P->date.annee);
+        printf("Identifiant: %d\nNom: %s\nPrenom: %s\nAge: %d ans , ne le %d/%d/%d \n",P->Id, P->nom, P->prenom, P->age, P->date.jour, P->date.mois,P->date.annee);
         for (int i = 0; i < NBR_NOTES; i++) { 
             printf("Note en %s : %.2f/20\n", P->note[i].libelle, P->note[i].valeur);
         }
         P->Moy=calculer_Moyenne(P);
-        printf("Moyenne generale : %.2f/20\n", P->Moy);  
+        printf("Moyenne generale : %.2f/20\n---------\n", P->Moy);  
         P=P->suivant;
     }
-}
-int calculerAge(const EtudiantRepere* P) {
-    // Récupérer la date actuelle
-    time_t t = time(NULL);
-    struct tm dateActuelle = *localtime(&t);
-    // Extraire l'année, le mois et le jour actuels
-    int anneeActuelle = dateActuelle.tm_year + 1900; // tm_year donne l'année depuis 1900
-    int moisActuel = dateActuelle.tm_mon + 1;        // tm_mon va de 0 à 11
-    int jourActuel = dateActuelle.tm_mday;
-    // Calcul de l'âge
-    int age = anneeActuelle - P->date.annee;
-    // Ajuster si la date d'anniversaire n'est pas encore passée
-    if (P->date.mois > moisActuel || (P->date.mois == moisActuel && P->date.jour > jourActuel)) {
-        age--;
-    }
-    return age;
 }
 void creer_fichier_txt (){
     FILE *fichier=fopen("pEtudiants.txt","w");
