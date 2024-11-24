@@ -5,7 +5,7 @@
 #include <string.h> 
 #define NBR_NOTES 14
 typedef struct {
-    char libelle[30];
+    char libelle[100];
     float valeur;
 } Notes;
 typedef struct {
@@ -29,10 +29,21 @@ typedef struct ListeRepere{
 Liste * Creer_Liste_Etudiants(){
     Liste *Li;
     Li = (Liste*)malloc(sizeof(Liste));
+    if (Li == NULL) {
+        perror("Erreur d'allocation mémoire");
+        exit(EXIT_FAILURE);
+    }
     Li -> tete = NULL;
     Li -> queue = NULL;
     Li -> nef = 0;
 return(Li);
+}
+float calculer_Moyenne(const EtudiantRepere *P) { 
+    float MOY=0;
+    for (int i=0;i<NBR_NOTES;i++) {
+        MOY+=P->note[i].valeur;
+    }
+    return (MOY) / NBR_NOTES; 
 }
 EtudiantRepere * Creer_Etudiant(){
     EtudiantRepere *P=(EtudiantRepere*)malloc(sizeof(EtudiantRepere));
@@ -86,12 +97,12 @@ EtudiantRepere * Creer_Etudiant(){
             }
         }while ((P->note[i].valeur>20) || (P->note[i].valeur<0));
     }
-    P->Moy=calculerMoyennePonderee(P);
+    P->Moy=calculer_Moyenne(P);
     P->suivant=NULL;
     return P;
 }
 void ajouter_Etudiant_liste(Liste* li){
-    EtudiantRepere* P=Creer_Produit();
+    EtudiantRepere* P = Creer_Produit();
     if (li->tete == NULL) {// si la liste est vide
         li->tete=P;
         li->queue=P;
@@ -105,12 +116,12 @@ void afficher_liste_Etudiant (Liste* li){
     EtudiantRepere* P;
     P= li->tete;
     printf("\nLa liste des étudiants avec leurs details\n:");
-    while (P=!NULL){
+    while (P!=NULL){
         printf("Identifiant: %d\nNom: %s\nPrenom: %s\nAge: %d ans , ne le %d/%d/%d \n---------\n",P->Id, P->nom, P->prenom, P->age, P->date.jour, P->date.mois,P->date.annee);
         for (int i = 0; i < NBR_NOTES; i++) { 
             printf("Note en %s : %.2f/20\n", P->note[i].libelle, P->note[i].valeur);
         }
-        P->Moy=calculerMoyenne(P);
+        P->Moy=calculer_Moyenne(P);
         printf("Moyenne generale : %.2f/20\n", P->Moy);  
         P=P->suivant;
     }
@@ -131,14 +142,6 @@ int calculerAge(const EtudiantRepere* P) {
     }
     return age;
 }
-float calculerMoyenne(const EtudiantRepere *P) { 
-    float MOY=0;
-    for (int i=0;i<NBR_NOTES;i++) {
-        MOY+=P->note[i].valeur;
-    }
-    return (MOY) / NBR_NOTES; 
-}
-
 void creer_fichier_txt (){
     FILE *fichier=fopen("pEtudiants.txt","w");
     if (fichier == NULL){
