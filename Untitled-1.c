@@ -11,19 +11,28 @@ typedef struct {
 typedef struct {
     int jour, mois, annee;
 } DateNaisRepere;
-typedef struct {
+typedef struct etudiant {
     char nom[50];
     char prenom[50];
     int age;
     DateNaisRepere date;
     int Id;
     Notes note[NBR_NOTES];
+    struct etudiant* suivant;
 } EtudiantRepere;
 typedef struct ListeRepere{
-    Prod *tete;
-    Prod *queue;
+    EtudiantRepere *tete;
+    EtudiantRepere *queue;
     int nef;
 }Liste;
+Liste * Creer_Liste_Produits(){
+    Liste *Li;
+    Li = (Liste*)malloc(sizeof(Liste));
+    Li -> tete = NULL;
+    Li -> queue = NULL;
+    Li -> nef = 0;
+return(Li);
+}
 void lireEtudiant(EtudiantRepere *P){
     printf("\nEntrez l'identifiant de l'etudiant :");
     scanf(" %d", &P->Id);
