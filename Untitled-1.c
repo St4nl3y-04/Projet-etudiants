@@ -25,7 +25,7 @@ typedef struct ListeRepere{
     EtudiantRepere *queue;
     int nef;
 }Liste;
-Liste * Creer_Liste_Produits(){
+Liste * Creer_Liste_Etudiants(){
     Liste *Li;
     Li = (Liste*)malloc(sizeof(Liste));
     Li -> tete = NULL;
@@ -33,7 +33,8 @@ Liste * Creer_Liste_Produits(){
     Li -> nef = 0;
 return(Li);
 }
-void lireEtudiant(EtudiantRepere *P){
+EtudiantRepere * Creer_Etudiant(){
+    EtudiantRepere *P=(Prod*)malloc(sizeof(Prod));
     printf("\nEntrez l'identifiant de l'etudiant :");
     scanf(" %d", &P->Id);
     fflush(stdin);//vider le tampon
@@ -79,6 +80,8 @@ void lireEtudiant(EtudiantRepere *P){
         printf("Entrez la note pour %s : ", P->note[i].libelle); 
         scanf("%f", &P->note[i].valeur); 
     }
+    P->suivant=NULL;
+    return P;
 }
 int calculerAge(const EtudiantRepere* P) {
     // Récupérer la date actuelle
