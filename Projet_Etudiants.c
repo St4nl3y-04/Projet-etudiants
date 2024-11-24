@@ -203,7 +203,6 @@ int main (){
             default:
             printf("Option invalide, veuillez reessayer.\n");
             break;
-        }
-    }while (C != 3);//dfdf
+        }while (C != 3);
     return 0;
 }
