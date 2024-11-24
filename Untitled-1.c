@@ -148,34 +148,38 @@ void creer_fichier_txt (){
         perror ("Erreur d'ouverture du fichier");
         return ;
     }
-    const char *modules[] = {
-        "TG&RO",  // Théorie des Graphes et Recherche Opérationnelle
-        "AO&A",   // Architecture des Ordinateurs & Assembleur
-        "BDR",   // Base des Données Relationnelles
-        "RI",    // Réseaux Informatiques
-        "SDC",   // Structure de Données en C
-        "LE1",   // Langues étrangères 1
-        "DS",    // Digital Skills
-        "SE&L",   // Systèmes d’Exploitation et Linux
-        "MOO",   // Modélisation Orientée Objet
-        "TLC",   // Théories des Langages et Compilation
-        "DW",    // Développement Web
-        "POO",   // Programmation Orientée Objet Java
-        "LE2",   // Langues étrangères 2
-        "CASS"   // Culture & Arts & Sport Skills
-    };
+    const char *modules[] = {"TG&RO","AO&A","BDR","RI","SDC","LE1","DS","SE&L","MOO","TLC","DW","POO","LE2","CASS"};
     fprintf(fichier, "Identifiant\t| Nom\t| Prénom\t| Age\t| Date de Naissance\t|");
     for (int i = 0; i < NBR_NOTES; i++) {
         fprintf(fichier, "%s\t| ", modules[i]);
     }
     fprintf(fichier,"Moyenne Génerale");
-    fprintf(fichier, "\n------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+    fprintf(fichier, "\n----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
     fclose(fichier);
     printf("Le fichier a ete cree avec succes\n");
+}
+void enregistrer_liste_etudiant(Liste* li) {
+    FILE* fichier = fopen("pEtudiants.txt", "a");
+    if (fichier == NULL) {
+        perror("Erreur lors de l'ouverture du fichier.\n");
+        return;
+    }
+    EtudiantRepere* P = li->tete;
+    while (P != NULL) {
+        fprintf(fichier, "%d\t| %s\t| %s\t| %i\t| %d/%d/%d\t|", P->Id, P->nom, P->prenom, P->age, P->date.jour, P->date.mois,P->date.annee);
+        for (int i = 0; i < NBR_NOTES; i++) {
+            fprintf(fichier, "%.2f/20\t| ", P->note[i].valeur);
+        }
+        fprintf(fichier,"%.2f/20\n",P->Moy);
+        P = P->suivant;
+    }
+    fclose(fichier);
 }
 int main (){
     Liste* liste = Creer_Liste_Etudiants();
     ajouter_Etudiant_liste(liste);
     afficher_liste_Etudiant(liste);
+    creer_fichier_txt();
+    enregistrer_liste_etudiant(liste);
     return 0;
 }
