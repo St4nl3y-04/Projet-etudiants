@@ -204,6 +204,5 @@ int main (){
             printf("Option invalide, veuillez reessayer.\n");
             break;
         }
-    }while (C != 3);//ddfdf
-    return 0;//ismailccc dsdnj  ss
+    }while (C != 3);
 }
