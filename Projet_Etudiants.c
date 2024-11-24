@@ -130,8 +130,8 @@ void ajouter_Etudiant_liste(Liste* li){
 }
 void afficher_liste_Etudiant (Liste* li){
     EtudiantRepere* P;
-    P= li->tete;
-    printf("\nLa liste des étudiants avec leurs details\n:");
+    P = li->tete;
+    printf("\nLa liste des etudiants avec leurs details\n:");
     while (P!=NULL){
         printf("Identifiant: %d\nNom: %s\nPrenom: %s\nAge: %d ans , ne le %d/%d/%d \n",P->Id, P->nom, P->prenom, P->age, P->date.jour, P->date.mois,P->date.annee);
         for (int i = 0; i < NBR_NOTES; i++) { 
@@ -149,11 +149,11 @@ void creer_fichier_txt (){ //Fonction pour créer un fichier txt où on peut
         return ;
     }
     const char *modules[] = {"TG&RO","AO&A","BDR","RI","SDC","LE1","DS","SE&L","MOO","TLC","DW","POO","LE2","CASS"};
-    fprintf(fichier, "Identifiant\t| Nom\t| Prénom\t| Age\t| Date de Naissance\t|");
+    fprintf(fichier, "Identifiant\t| Nom\t| Prenom\t| Age\t| Date de Naissance\t|");
     for (int i = 0; i < NBR_NOTES; i++) {
         fprintf(fichier, "%s\t| ", modules[i]);
     }
-    fprintf(fichier,"Moyenne Génerale");
+    fprintf(fichier,"Moyenne Generale");
     fprintf(fichier, "\n----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
     fclose(fichier);
     printf("Le fichier a ete cree avec succes\n");
@@ -171,7 +171,7 @@ void enregistrer_liste_etudiant(Liste* li) { // fonction pour enregistrer les et
             fprintf(fichier, "%.2f/20\t| ", P->note[i].valeur);
         }
         fprintf(fichier,"%.2f/20\n",P->Moy);
-        printf("L'etudiant '%s %s' a ete enregistrer avec succes.", P->nom, P->prenom);
+        printf("L'etudiant '%s %s' a ete enregistrer avec succes.\n", P->nom, P->prenom);
         P = P->suivant;
     }
     fclose(fichier);
@@ -201,7 +201,7 @@ int main (){
             enregistrer_liste_etudiant(liste);
             break;
             default:
-            printf("Option invalide, veuillez réessayer.\n");
+            printf("Option invalide, veuillez reessayer.\n");
             break;
         }
     }while (C != 3);
