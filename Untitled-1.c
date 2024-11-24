@@ -83,6 +83,17 @@ EtudiantRepere * Creer_Etudiant(){
     P->suivant=NULL;
     return P;
 }
+void ajouter_Etudiant_liste_debut(Liste* li){
+    Prod* P=Creer_Produit();
+    if (li->tete==NULL){
+        li->tete=P;
+        li->queue=P;
+    }else{
+        P->suivant = li->tete; //2ème case de liste doit pointer sur le début de la liste
+        li->tete=P; //le début de la liste doit etre ce P
+    }
+    li->nef++;
+}
 int calculerAge(const EtudiantRepere* P) {
     // Récupérer la date actuelle
     time_t t = time(NULL);
