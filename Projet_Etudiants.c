@@ -204,19 +204,6 @@ int main (){
             printf("Option invalide, veuillez reessayer.\n");
             break;
         }
-<<<<<<< HEAD
     }while (C != 3);
-<<<<<<< HEAD
     return 0;
-<<<<<<< HEAD
-}//okeee
-=======
 }
->>>>>>> 71ab655 (back)
-=======
-=======
-    }while (C != 3);//dfdfdfddg fdfdfd
-    return 0;
->>>>>>> Ismail's-Branch
-}
->>>>>>> dac26a926aa97b284a4fb3478f3725b14f0a571a
