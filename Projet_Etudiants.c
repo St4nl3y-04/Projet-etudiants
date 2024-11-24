@@ -138,11 +138,11 @@ void afficher_liste_Etudiant (Liste* li){
             printf("Note en %s : %.2f/20\n", P->note[i].libelle, P->note[i].valeur);
         }
         P->Moy=calculer_Moyenne(P);
-        printf("Moyenne generale : %.2f/20\n---------\n", P->Moy);  
+        printf("Moyenne generale : %.2f/20\n----------------------------\n", P->Moy);  
         P=P->suivant;
     }
 }
-void creer_fichier_txt (){
+void creer_fichier_txt (){ //Fonction pour créer un fichier txt où on peut
     FILE *fichier=fopen("pEtudiants.txt","w");
     if (fichier == NULL){
         perror ("Erreur d'ouverture du fichier");
@@ -158,7 +158,7 @@ void creer_fichier_txt (){
     fclose(fichier);
     printf("Le fichier a ete cree avec succes\n");
 }
-void enregistrer_liste_etudiant(Liste* li) {
+void enregistrer_liste_etudiant(Liste* li) { // fonction pour enregistrer les etudiants ans un fichier txt
     FILE* fichier = fopen("pEtudiants.txt", "a");
     if (fichier == NULL) {
         perror("Erreur lors de l'ouverture du fichier.\n");
@@ -171,15 +171,39 @@ void enregistrer_liste_etudiant(Liste* li) {
             fprintf(fichier, "%.2f/20\t| ", P->note[i].valeur);
         }
         fprintf(fichier,"%.2f/20\n",P->Moy);
+        printf("L'etudiant '%s %s' a ete enregistrer avec succes.", P->nom, P->prenom);
         P = P->suivant;
     }
     fclose(fichier);
 }
+void afficher_menu() {
+    printf("\nMenu:\n");
+    printf("1. Ajouter etudiant\n");
+    printf("2. Afficher liste etudiant\n");
+    printf("3. Quitter\n");
+    printf("Choisissez une option: ");
+}
 int main (){
+    int C;
     Liste* liste = Creer_Liste_Etudiants();
-    ajouter_Etudiant_liste(liste);
-    afficher_liste_Etudiant(liste);
     creer_fichier_txt();
-    enregistrer_liste_etudiant(liste);
+    do{
+        afficher_menu();
+        scanf("%d",&C);
+        switch(C){
+            case 1:
+            ajouter_Etudiant_liste(liste);
+            break;
+            case 2:
+            afficher_liste_Etudiant(liste);
+            break;
+            case 3:
+            enregistrer_liste_etudiant(liste);
+            break;
+            default:
+            printf("Option invalide, veuillez réessayer.\n");
+            break;
+        }
+    }while (C != 3);
     return 0;
 }
