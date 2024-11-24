@@ -77,6 +77,14 @@ EtudiantRepere * Creer_Etudiant(){
         } else if (i == 13) {
             strcpy(P->note[i].libelle, "Culture & Arts & Sport Skills");
         }
+        do{
+            printf("Entrez la note pour %s : ", P->note[i].libelle); 
+            scanf("%f", &P->note[i].valeur); 
+            if ((P->note[i].valeur>20) || (P->note[i].valeur<0)){
+                printf("Veuillez Saisir une note entre 0 et 20.\n")
+            }
+            
+        }while ((P->note[i].valeur>20) || (P->note[i].valeur<0));
         printf("Entrez la note pour %s : ", P->note[i].libelle); 
         scanf("%f", &P->note[i].valeur); 
     }
