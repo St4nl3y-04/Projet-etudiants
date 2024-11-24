@@ -206,4 +206,8 @@ int main (){
         }
     }while (C != 3);
     return 0;
+<<<<<<< HEAD
 }//okeee
+=======
+}
+>>>>>>> 71ab655 (back)
