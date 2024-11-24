@@ -19,6 +19,7 @@ typedef struct etudiant {
     int Id;
     Notes note[NBR_NOTES];
     struct etudiant* suivant;
+    float Moy;
 } EtudiantRepere;
 typedef struct ListeRepere{
     EtudiantRepere *tete;
@@ -34,7 +35,7 @@ Liste * Creer_Liste_Etudiants(){
 return(Li);
 }
 EtudiantRepere * Creer_Etudiant(){
-    EtudiantRepere *P=(Prod*)malloc(sizeof(Prod));
+    EtudiantRepere *P=(EtudiantRepere*)malloc(sizeof(EtudiantRepere));
     printf("\nEntrez l'identifiant de l'etudiant :");
     scanf(" %d", &P->Id);
     fflush(stdin);//vider le tampon
@@ -81,26 +82,38 @@ EtudiantRepere * Creer_Etudiant(){
             printf("Entrez la note pour %s : ", P->note[i].libelle); 
             scanf("%f", &P->note[i].valeur); 
             if ((P->note[i].valeur>20) || (P->note[i].valeur<0)){
-                printf("Veuillez Saisir une note entre 0 et 20.\n")
+                printf("Veuillez Saisir une note entre 0 et 20.\n");
             }
-            
         }while ((P->note[i].valeur>20) || (P->note[i].valeur<0));
-        printf("Entrez la note pour %s : ", P->note[i].libelle); 
-        scanf("%f", &P->note[i].valeur); 
     }
+    P->Moy=calculerMoyennePonderee(P);
     P->suivant=NULL;
     return P;
 }
-void ajouter_Etudiant_liste_debut(Liste* li){
-    Prod* P=Creer_Produit();
-    if (li->tete==NULL){
+void ajouter_Etudiant_liste(Liste* li){
+    EtudiantRepere* P=Creer_Produit();
+    if (li->tete == NULL) {// si la liste est vide
         li->tete=P;
         li->queue=P;
     }else{
-        P->suivant = li->tete; //2ème case de liste doit pointer sur le début de la liste
-        li->tete=P; //le début de la liste doit etre ce P
+        li->queue->suivant=P; //2ème case du dernier element doit pointer sur ce nouveau element
+        li->queue=P; //le dérnier element de la liste doit etre ce P
     }
     li->nef++;
+}
+void afficher_liste_Etudiant (Liste* li){
+    EtudiantRepere* P;
+    P= li->tete;
+    printf("\nLa liste des étudiants avec leurs details\n:");
+    while (P=!NULL){
+        printf("Identifiant: %d\nNom: %s\nPrenom: %s\nAge: %d ans , ne le %d/%d/%d \n---------\n",P->Id, P->nom, P->prenom, P->age, P->date.jour, P->date.mois,P->date.annee);
+        for (int i = 0; i < NBR_NOTES; i++) { 
+            printf("Note en %s : %.2f/20\n", P->note[i].libelle, P->note[i].valeur);
+        }
+        P->Moy=calculerMoyenne(P);
+        printf("Moyenne generale : %.2f/20\n", P->Moy);  
+        P=P->suivant;
+    }
 }
 int calculerAge(const EtudiantRepere* P) {
     // Récupérer la date actuelle
@@ -118,19 +131,12 @@ int calculerAge(const EtudiantRepere* P) {
     }
     return age;
 }
-float calculerMoyennePonderee(const EtudiantRepere *P) { 
+float calculerMoyenne(const EtudiantRepere *P) { 
     float MOY=0;
     for (int i=0;i<NBR_NOTES;i++) {
         MOY+=P->note[i].valeur;
     }
     return (MOY) / NBR_NOTES; 
-}
-void afficherEtudiant (const EtudiantRepere *P){
-    printf("Identifiant: %d\nNom: %s\nPrenom: %s\nAge: %d ans , ne le %d/%d/%d \n",P->Id, P->nom, P->prenom, P->age, P->date.jour, P->date.mois,P->date.annee);
-    for (int i = 0; i < NBR_NOTES; i++) { 
-        printf("Note en %s : %.2f/20\n", P->note[i].libelle, P->note[i].valeur);}
-    float M=calculerMoyennePonderee(P);
-    printf("Moyenne ponderee : %.2f/20\n", M); 
 }
 
 void creer_fichier_txt (){
@@ -165,25 +171,8 @@ void creer_fichier_txt (){
     printf("Le fichier a ete cree avec succes\n");
 }
 int main (){
-    int N;
-    do {
-    printf("Combien d'etudiants voulez-vous entrer ? ");
-    scanf("%d", &N);
-    } while (N<=0);
-    EtudiantRepere *E=(EtudiantRepere*)malloc(N*sizeof(EtudiantRepere));
-    if (E == NULL) { 
-        perror("Erreur d'allocation memoire\n"); 
-        return 1;
-    }
-    for (int i = 0; i < N; i++) { 
-        printf("\n--- Lecture des informations pour l'étudiant %d ---\n", i + 1); 
-        lireEtudiant(&E[i]);
-    }
-    for (int i = 0; i < N; i++) { 
-        printf("\n--- Affichage des informations pour l'etudiant %d ---\n", i + 1); 
-        afficherEtudiant(&E[i]); 
-    }
-    creer_fichier_txt();
-    free(E);
+    Liste* liste = Creer_Liste_Etudiants();
+    ajouter_Etudiant_liste(liste);
+    afficher_liste_Etudiant(liste);
     return 0;
 }
