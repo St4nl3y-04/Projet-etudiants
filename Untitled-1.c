@@ -19,6 +19,11 @@ typedef struct {
     int Id;
     Notes note[NBR_NOTES];
 } EtudiantRepere;
+typedef struct ListeRepere{
+    Prod *tete;
+    Prod *queue;
+    int nef;
+}Liste;
 void lireEtudiant(EtudiantRepere *P){
     printf("\nEntrez l'identifiant de l'etudiant :");
     scanf(" %d", &P->Id);
