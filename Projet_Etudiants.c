@@ -176,11 +176,36 @@ void enregistrer_liste_etudiant(Liste* li) { // fonction pour enregistrer les et
     }
     fclose(fichier);
 }
+void Suprimer_Etudiant(Liste* li, int pos){
+    if (li == NULL || li->tete == NULL){
+        exit(EXIT_FAILURE);
+    }
+    EtudiantRepere* Courant=li->tete,*temp;
+    if (pos == 1) {
+        li->tete = Courant->suivant; // La tête de liste avance au nœud suivant
+        free(Courant); // Libération de la mémoire de l'ancien premier nœud
+        printf("L'étudiant de position %d est supprimé avec succès.\n", pos);
+        return;
+    }
+    for(int i=1; Courant!=NULL && i<pos-1;i++){
+        Courant=Courant->suivant;
+    }
+    if (Courant == NULL || Courant->suivant == NULL) {
+        printf("Position invalide. Aucun étudiant n'a été supprimé.\n");
+        return;
+    }
+    temp=Courant->suivant;
+    Courant->suivant=temp->suivant;
+    free(temp);
+    printf("L'etudiant de position %d est supprime avec succes.\n", pos);
+}
 void afficher_menu() {
     printf("\nMenu:\n");
     printf("1. Ajouter etudiant\n");
     printf("2. Afficher liste etudiant\n");
-    printf("3. Quitter\n");
+    printf("3. Supprimer un etudiant\n");
+    printf("4. Enregister les etudiants dans un fichier\n");
+    printf("5. Quitter\n");
     printf("Choisissez une option: ");
 }
 int main (){
@@ -198,12 +223,22 @@ int main (){
             afficher_liste_Etudiant(liste);
             break;
             case 3:
+            printf("Veuillez saisir la position de l'etudiant que vous souhaiter supprimer: ");
+            int f;
+            scanf("%d", &f);
+            Suprimer_Etudiant(liste,f);
+            break;
+            case 4:
             enregistrer_liste_etudiant(liste);
+            printf("Liste des etudiants est enregistrees avec success.");
+            break;
+            case 5:
+            printf("Au revoir");
             break;
             default:
             printf("Option invalide, veuillez reessayer.\n");
             break;
         }
-    }while (C != 3);
+    }while (C != 5);
     return 0;
 }
