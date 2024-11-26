@@ -175,6 +175,34 @@ void enregistrer_liste_etudiant(Liste* li) { // fonction pour enregistrer les et
         P = P->suivant;
     }
     fclose(fichier);
+    EtudiantRepere* Recherche_et_Affichage_des_Informations_nom(Liste* li ,char *nom) {
+EtudiantRepere *courant=li->tete;
+while(courant!=NULL){
+    if(strcpy((courant->nom,nom)==0){
+        printf("les informations de l etu avec le nom %s sont \n",nom);
+        afficherEtudiant(courant);
+        courant=courant->suivant;
+    }
+}}
+EtudiantRepere* Recherche_et_Affichage_des_Informations_identifiant(Liste* li ,int ID) {
+EtudiantRepere *courant=li->tete;
+while(courant->suivant!=NULL){
+    if(courant->Id=ID){
+        printf("les informations de l etu avec le nom %s sont \n",nom);
+        afficherEtudiant(courant);
+        courant=courant->suivant;
+    }
+}}
+EtudiantRepere* Recherche_et_Affichage_des_Informations_age(Liste* li ,int age) {
+EtudiantRepere *courant=li->tete;
+while(courant->suivant!=NULL){
+    if(courant->age=age){
+        printf("les informations de l etu avec le nom %s sont \n",nom);
+        afficherEtudiant(courant);
+        courant=courant->suivant;
+    }
+}}
+
 }
 void afficher_menu() {
     printf("\nMenu:\n");
@@ -206,5 +234,5 @@ int main (){
         }
     }while (C != 3);
     return 0;
-    // cc lbacharya
+    
 }
