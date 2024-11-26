@@ -206,6 +206,7 @@ void afficher_menu() {
     printf("3. Supprimer un etudiant\n");
     printf("4. Quitter\n");
     printf("Choisissez une option: ");
+    //bbbbbbbbbbbb
 }
 int main (){
     int C;
