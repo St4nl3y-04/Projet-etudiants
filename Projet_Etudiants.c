@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -203,8 +204,7 @@ void afficher_menu() {
     printf("1. Ajouter etudiant\n");
     printf("2. Afficher liste etudiant\n");
     printf("3. Supprimer un etudiant\n");
-    printf("4. Enregister les etudiants dans un fichier\n");
-    printf("5. Quitter\n");
+    printf("4. Quitter\n");
     printf("Choisissez une option: ");
 }
 int main (){
@@ -222,7 +222,7 @@ int main (){
             afficher_liste_Etudiant(liste);
             break;
             case 3:
-            printf("Veuillez saisir la position de l'etudiant que vous souhaiter supprimer: ");
+            printf("Veuillez saisir la position de l'etudiant que vous souhaiter supprimer: \n");
             int f;
             scanf("%d", &f);
             Suprimer_Etudiant(liste,f);
@@ -238,6 +238,6 @@ int main (){
             printf("Option invalide, veuillez reessayer.\n");
             break;
         }
-    }while (C != 5);
+    }while (C != 5);//ffgdg
     return 0;
 }
