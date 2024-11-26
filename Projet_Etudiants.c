@@ -238,6 +238,6 @@ int main (){
             printf("Option invalide, veuillez reessayer.\n");
             break;
         }
-    }while (C != 5);
+    }while (C != 5);//oizdygbzdyf z
     return 0;
 }
