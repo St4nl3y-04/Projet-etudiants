@@ -168,8 +168,6 @@ void creer_fichier_txt (){ //Fonction pour créer un fichier txt où on peut
     fprintf(fichier,"Moyenne Generale");
     fprintf(fichier, "\n----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
     fclose(fichier);
-    printf("Le fichier a ete cree avec succes\n");
-    fclose(fichier);
 }
 void enregistrer_liste_etudiant(Liste* li) { // fonction pour enregistrer les etudiants ans un fichier txt
     FILE* fichier = fopen("pEtudiants.txt", "a");
@@ -321,6 +319,7 @@ int main (){
         switch(C){
             case 1:
             ajouter_Etudiant_liste(liste);
+            creer_fichier_txt();
             enregistrer_liste_etudiant(liste);
             break;
             case 2:
