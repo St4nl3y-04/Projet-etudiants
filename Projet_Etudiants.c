@@ -18,7 +18,7 @@ typedef struct etudiant {
     DateNaisRepere date;
     int Id;
     Notes note[NBR_NOTES];
-    struct etudiant* suivant;
+    struct etudiant* suivant; 
     float Moy;
 } EtudiantRepere;
 typedef struct ListeRepere{
@@ -61,6 +61,39 @@ int calculerAge(const EtudiantRepere* P) {
     }
     return age;
 }
+void Libelle_notes(EtudiantRepere *P) {
+    for (int i = 0; i < NBR_NOTES; i++) { 
+        if (i == 0) {
+            strcpy(P->note[i].libelle, "Theorie des Graphes et Recherche Operationnelle");
+        } else if (i == 1) {
+            strcpy(P->note[i].libelle, "Architecture des Ordinateurs & Assembleur");
+        } else if (i == 2) {
+            strcpy(P->note[i].libelle, "Base des Donnees Relationnelles");
+        } else if (i == 3) {
+            strcpy(P->note[i].libelle, "Reseaux Informatiques");
+        } else if (i == 4) {
+            strcpy(P->note[i].libelle, "Structure de Donnees en C");
+        } else if (i == 5) {
+            strcpy(P->note[i].libelle, "Langues etrangeres 1");
+        } else if (i == 6) {
+            strcpy(P->note[i].libelle, "Digital Skills");
+        } else if (i == 7) {
+            strcpy(P->note[i].libelle, "Systemes d'Exploitation et Linux");
+        } else if (i == 8) {
+            strcpy(P->note[i].libelle, "Modelisation Oriente Objet");
+        } else if (i == 9) {
+            strcpy(P->note[i].libelle, "Theories des Langages et Compilation");
+        } else if (i == 10) {
+            strcpy(P->note[i].libelle, "Developpement Web");
+        } else if (i == 11) {
+            strcpy(P->note[i].libelle, "Programmation Oriente Objet Java");
+        } else if (i == 12) {
+            strcpy(P->note[i].libelle, "Langues etrangeres 2");
+        } else if (i == 13) {
+            strcpy(P->note[i].libelle, "Culture & Arts & Sport Skills");
+        }
+    }
+}
 EtudiantRepere * Creer_Etudiant(){
     EtudiantRepere *P=(EtudiantRepere*)malloc(sizeof(EtudiantRepere));
     printf("\nEntrez l'identifiant de l'etudiant :");
@@ -76,35 +109,7 @@ EtudiantRepere * Creer_Etudiant(){
     scanf("%d %d %d", &P->date.jour, &P->date.mois, &P->date.annee);
     P->age=calculerAge(P);
     for (int i = 0; i < NBR_NOTES; i++) { 
-        if (i == 0) {
-            strcpy(P->note[i].libelle, "Théorie des Graphes et Recherche Opérationnelle");
-        } else if (i == 1) {
-            strcpy(P->note[i].libelle, "Architecture des Ordinateurs & Assembleur");
-        } else if (i == 2) {
-            strcpy(P->note[i].libelle, "Base des Données Relationnelles");
-        } else if (i == 3) {
-            strcpy(P->note[i].libelle, "Réseaux Informatiques");
-        } else if (i == 4) {
-            strcpy(P->note[i].libelle, "Structure de Données en C");
-        } else if (i == 5) {
-            strcpy(P->note[i].libelle, "Langues étrangères 1");
-        } else if (i == 6) {
-            strcpy(P->note[i].libelle, "Digital Skills");
-        } else if (i == 7) {
-            strcpy(P->note[i].libelle, "Systèmes d'Exploitation et Linux");
-        } else if (i == 8) {
-            strcpy(P->note[i].libelle, "Modélisation Orientée Objet");
-        } else if (i == 9) {
-            strcpy(P->note[i].libelle, "Théories des Langages et Compilation");
-        } else if (i == 10) {
-            strcpy(P->note[i].libelle, "Développement Web");
-        } else if (i == 11) {
-            strcpy(P->note[i].libelle, "Programmation Orientée Objet Java");
-        } else if (i == 12) {
-            strcpy(P->note[i].libelle, "Langues étrangères 2");
-        } else if (i == 13) {
-            strcpy(P->note[i].libelle, "Culture & Arts & Sport Skills");
-        }
+        Libelle_notes(P);
         do{
             printf("Entrez la note pour %s : ", P->note[i].libelle); 
             scanf("%f", &P->note[i].valeur); 
@@ -117,13 +122,12 @@ EtudiantRepere * Creer_Etudiant(){
     P->suivant=NULL;
     return P;
 }
-void afficherEtudiant(EtudiantRepere* etu) {
-    printf("Identifiant: %d\nNom: %s\nPrenom: %s\nAge: %d ans, ne le %d/%d/%d\n", 
-           etu->Id, etu->nom, etu->prenom, etu->age, etu->date.jour, etu->date.mois, etu->date.annee);
+void afficherEtudiant(EtudiantRepere* E) {
+    printf("Identifiant: %d\nNom: %s\nPrenom: %s\nAge: %d ans, ne le %d/%d/%d\n", E->Id, E->nom, E->prenom, E->age, E->date.jour, E->date.mois, E->date.annee);
     for (int i = 0; i < NBR_NOTES; i++) {
-        printf("Note en %s : %.2f/20\n", etu->note[i].libelle, etu->note[i].valeur);
+        printf("Note en %s : %.2f/20\n", E->note[i].libelle, E->note[i].valeur);
     }
-    printf("Moyenne generale : %.2f/20\n----------------------------\n", etu->Moy);
+    printf("Moyenne generale : %.2f/20\n----------------------------\n", E->Moy);
 }
 void ajouter_Etudiant_liste(Liste* li){
     EtudiantRepere* P = Creer_Etudiant();
@@ -165,6 +169,7 @@ void creer_fichier_txt (){ //Fonction pour créer un fichier txt où on peut
     fprintf(fichier, "\n----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
     fclose(fichier);
     printf("Le fichier a ete cree avec succes\n");
+    fclose(fichier);
 }
 void enregistrer_liste_etudiant(Liste* li) { // fonction pour enregistrer les etudiants ans un fichier txt
     FILE* fichier = fopen("pEtudiants.txt", "a");
@@ -179,7 +184,6 @@ void enregistrer_liste_etudiant(Liste* li) { // fonction pour enregistrer les et
             fprintf(fichier, "%.2f/20\t| ", P->note[i].valeur);
         }
         fprintf(fichier,"%.2f/20\n",P->Moy);
-        printf("L'etudiant '%s %s' a ete enregistrer avec succes.\n", P->nom, P->prenom);
         P = P->suivant;
     }
     fclose(fichier);
@@ -206,6 +210,7 @@ void Suprimer_Etudiant(Liste* li, int pos){
     Courant->suivant=temp->suivant;
     free(temp);
     printf("L'etudiant de position %d est supprime avec succes.\n", pos);
+    li->nef--;
 }
 void Recherche_et_Affichage_des_Informations_nom(Liste* li ,char*nom) {
     EtudiantRepere *courant=li->tete;
@@ -217,8 +222,7 @@ void Recherche_et_Affichage_des_Informations_nom(Liste* li ,char*nom) {
             found=1;}
         courant=courant->suivant;}
         if (!found){
-            printf("l'
-            etu n existe pas dans la base");
+            printf("l'etu n existe pas dans la base");
         }
 
 }
@@ -226,7 +230,7 @@ void Recherche_et_Affichage_des_Informations_identifiant(Liste* li ,int ID) {
 EtudiantRepere *courant=li->tete;
 int found=0;
 while(courant->suivant!=NULL){
-    if(courant->Id==ID){
+    if(courant-> Id==ID){
         printf("les informations de l etu avec identifiant %d sont \n",ID);
         afficherEtudiant(courant);
         found=1;}
@@ -250,16 +254,54 @@ while(courant->suivant!=NULL){
         printf("l etu n existe pas dans la base");
     }
 }
+Liste* lire_fichier_txt () {
+    FILE *F=fopen("pEtudiants.txt","r");
+    if ((F)==NULL) {
+        perror ("Erreur d'ouverture du fichier");
+        return NULL;
+    }
+    Liste* li=Creer_Liste_Etudiants();
+    char buffer[512];
+    rewind(F);
+    fgets(buffer, sizeof(buffer), F); // Première ligne (Nom, Prix, Quantité)
+    fgets(buffer, sizeof(buffer), F); // Ligne de séparation
+    while (fgets(buffer, sizeof(buffer), F) != NULL){
+        EtudiantRepere *P=(EtudiantRepere*)malloc(sizeof(EtudiantRepere));
+        if (P == NULL) {
+            perror("Erreur d'allocation mémoire pour un étudiant");
+            fclose(F);
+            return li; // On retourne la liste partiellement construite
+        }
+        int notesStartIndex = 0;
+        sscanf(buffer,"%d\t| %s\t| %s\t| %i\t| %d/%d/%d\t|%n", &P->Id, P->nom, P->prenom, &P->age, &P->date.jour, &P->date.mois,&P->date.annee, &notesStartIndex);
+        char* notesData = buffer + notesStartIndex;
+        for (int i=0; i<NBR_NOTES;i++){
+            sscanf(notesData, "%f/20\t| %n", &P->note[i].valeur, &notesStartIndex);
+            notesData += notesStartIndex;
+        }
+        sscanf(notesData, "%f/20\n", &P->Moy);
+        Libelle_notes(P);
+        P->suivant=NULL;
+        if (li->tete == NULL) { // si la liste est vide
+            li->tete=P;
+            li->queue=P;
+        }else{
+            li->queue->suivant=P; //2ème case du dernier element doit pointer sur ce nouveau element
+            li->queue=P; //le dérnier element de la liste doit etre ce P
+        }
+        li->nef++;
+        }
+    fclose(F);
+    return li;
+}
 void afficher_menu() {
     printf("\nMenu Principale:\n");
-    printf("1. Ajouter etudiant\n");
-    printf("2. Afficher liste etudiant\n");
+    printf("1. Ajouter un etudiant\n");
+    printf("2. Afficher la liste d'etudiants\n");
     printf("3. Supprimer un etudiant\n");
-    printf("4. enregistre les etuds\n");
-    printf("5. chercher sur un etudiant\n");
-    printf("6. Quitter\n");
+    printf("4. chercher un etudiant\n");
+    printf("5. Quitter\n");
     printf("Choisissez une option: ");
-    
 }
 void afficher_menu_recherche(){
     printf("\nMenu  de recherche:\n");
@@ -272,14 +314,14 @@ void afficher_menu_recherche(){
 int main (){
     int C,k, iden, agee;
     char nom[50];     
-    Liste* liste = Creer_Liste_Etudiants();
-    creer_fichier_txt();
+    Liste* liste = lire_fichier_txt();
     do{
         afficher_menu();
         scanf("%d",&C);
         switch(C){
             case 1:
             ajouter_Etudiant_liste(liste);
+            enregistrer_liste_etudiant(liste);
             break;
             case 2:
             afficher_liste_Etudiant(liste);
@@ -289,12 +331,10 @@ int main (){
             int f;
             scanf("%d", &f);
             Suprimer_Etudiant(liste,f);
+            creer_fichier_txt();
+            enregistrer_liste_etudiant(liste);
             break;
             case 4:
-            enregistrer_liste_etudiant(liste);
-            printf("Liste des etudiants est enregistrees avec success.");
-            break;
-            case 5:
             do{   
                 afficher_menu_recherche();
                 scanf("%d",&k);
@@ -322,13 +362,13 @@ int main (){
                     break;
                 }
             }while (k!=4);
-            case 6:
+            case 5:
             printf("Au revoir");
             break;
             default:
             printf("Option invalide, veuillez reessayer.\n");
             break;
         }
-    }while (C != 6);
+    }while (C != 5);
     return 0;
 }
