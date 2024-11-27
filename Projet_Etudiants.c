@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -116,6 +117,14 @@ EtudiantRepere * Creer_Etudiant(){
     P->suivant=NULL;
     return P;
 }
+void afficherEtudiant(EtudiantRepere* etu) {
+    printf("Identifiant: %d\nNom: %s\nPrenom: %s\nAge: %d ans, ne le %d/%d/%d\n", 
+           etu->Id, etu->nom, etu->prenom, etu->age, etu->date.jour, etu->date.mois, etu->date.annee);
+    for (int i = 0; i < NBR_NOTES; i++) {
+        printf("Note en %s : %.2f/20\n", etu->note[i].libelle, etu->note[i].valeur);
+    }
+    printf("Moyenne generale : %.2f/20\n----------------------------\n", etu->Moy);
+}
 void ajouter_Etudiant_liste(Liste* li){
     EtudiantRepere* P = Creer_Etudiant();
     if (li->tete == NULL) {// si la liste est vide
@@ -198,18 +207,113 @@ void Suprimer_Etudiant(Liste* li, int pos){
     free(temp);
     printf("L'etudiant de position %d est supprime avec succes.\n", pos);
 }
-// nnnnnnnnnnnnn
+void Recherche_et_Affichage_des_Informations_identifiant(Liste* li ,int ID) {
+EtudiantRepere *courant=li->tete;
+int found=0;
+while(courant!=NULL){
+    if(courant->Id==ID){
+        printf("les informations de l etu avec identifiant %d sont \n",ID);
+        afficherEtudiant(courant);
+        found=1;}
+        courant=courant->suivant;  
+    }
+    if(!found){
+        printf("l etu n existe pas dans la base");
+    }
+}
+void afficher_menu_recherche_specifique(){
+    printf("\nMenu  de recherche specifique:\n");
+    printf("1. oui\n");
+    printf("2. non\n");
+    printf("Choisissez une option: ");
+}
+void Recherche_et_Affichage_des_Informations_nom(Liste* li ,char*nom) {
+    EtudiantRepere *courant=li->tete;
+    int found=0,IDE,b;
+    while(courant!=NULL){
+        if(strcmp(courant->nom,nom)==0){
+            printf("les informations de l etu avec le nom %s sont \n",nom);
+            afficherEtudiant(courant);
+            found=1;}
+        courant=courant->suivant;}
+        if (found==1){
+            do{
+         afficher_menu_recherche_specifique();
+          scanf("%d",&b); 
+                switch(b){
+                    case 1:
+                    printf("si vous vouler specifier l'etu selon votre desir merci de nous donner son identifiant ");
+                    scanf("%d",&IDE);
+                    Recherche_et_Affichage_des_Informations_identifiant(li,IDE);
+                    break;
+                    case 2:
+                    printf("merci");
+                    break;
+                    default:
+                    printf("Option invalide, veuillez reessayer.\n");
+                    break;}
+            }while (b!=2);}
+            
+            
+        if (!found){
+            printf("l'etu n existe pas dans la base");
+        }
+
+}
+
+void Recherche_et_Affichage_des_Informations_age(Liste* li ,int age) {
+EtudiantRepere *courant=li->tete;
+int found=0,b,IDE;
+while(courant!=NULL){
+    if(courant->age==age){
+        printf("les informations de l etu qui a l age %d sont \n",age);
+        afficherEtudiant(courant);
+        found=1;}
+        courant=courant->suivant;
+    }
+    if (found==1){
+            do{
+         afficher_menu_recherche_specifique();
+          scanf("%d",&b); 
+                switch(b){
+                    case 1:
+                    printf("si vous vouler specifier l'etu selon votre desir merci de nous donner son identifiant ");
+                    scanf("%d",&IDE);
+                    Recherche_et_Affichage_des_Informations_identifiant(li,IDE);
+                    break;
+                    case 2:
+                    printf("merci");
+                    break;
+                    default:
+                    printf("Option invalide, veuillez reessayer.\n");
+                    break;}
+            }while (b!=2);}
+    if(!found){
+        printf("l etu n existe pas dans la base");
+    }
+}
 void afficher_menu() {
-    printf("\nMenu:\n");
+    printf("\nMenu Principale:\n");
     printf("1. Ajouter etudiant\n");
     printf("2. Afficher liste etudiant\n");
     printf("3. Supprimer un etudiant\n");
-    printf("4. Enregister les etudiants dans un fichier\n");
-    printf("5. Quitter\n");
+    printf("4. enregistre les etuds\n");
+    printf("5. chercher sur un etudiant\n");
+    printf("6. Quitter\n");
+    printf("Choisissez une option: ");
+    
+}
+void afficher_menu_recherche(){
+    printf("\nMenu  de recherche:\n");
+    printf("1. chercher par nom\n");
+    printf("2. chercher par age\n");
+    printf("3. chercher par identifiant\n");
+    printf("4. quitter\n");
     printf("Choisissez une option: ");
 }
 int main (){
-    int C;
+    int C,k, iden, agee;
+    char nom[50];     
     Liste* liste = Creer_Liste_Etudiants();
     creer_fichier_txt();
     do{
@@ -223,7 +327,7 @@ int main (){
             afficher_liste_Etudiant(liste);
             break;
             case 3:
-            printf("Veuillez saisir la position de l'etudiant que vous souhaiter supprimer: ");
+            printf("Veuillez saisir la position de l'etudiant que vous souhaiter supprimer: \n");
             int f;
             scanf("%d", &f);
             Suprimer_Etudiant(liste,f);
@@ -233,12 +337,40 @@ int main (){
             printf("Liste des etudiants est enregistrees avec success.");
             break;
             case 5:
+            do{   
+                afficher_menu_recherche();
+                scanf("%d",&k);
+                switch(k){
+                    case 1:
+                    printf("veuiller saisir le nom de l etu que souhaiter chercher ");
+                    scanf("%s",nom);
+                    Recherche_et_Affichage_des_Informations_nom(liste,nom);
+                    break;
+                    case 2:
+                    printf("saisire l age de l'etu que vous vouler chercher sur lui");
+                    scanf("%d",&agee);
+                    Recherche_et_Affichage_des_Informations_age(liste,agee);
+                    break;
+                    case 3:
+                    printf("saisire l identifiant de l'etu que vous vouler chercher sur lui");
+                    scanf("%d",&iden);
+                    Recherche_et_Affichage_des_Informations_identifiant(liste,iden);
+                    break;
+                    case 4:
+                    printf("Au revoir");
+                    break;
+                    default:
+                    printf("Option invalide, veuillez reessayer.\n");
+                    break;
+                }
+            }while (k!=4);
+            case 6:
             printf("Au revoir");
             break;
             default:
             printf("Option invalide, veuillez reessayer.\n");
             break;
         }
-    }while (C != 5);/////// sdguyfjldfdfhfqsfhiyfqdf
+    }while (C != 6);
     return 0;
 }
