@@ -122,6 +122,20 @@ EtudiantRepere * Creer_Etudiant(){
     P->suivant=NULL;
     return P;
 }
+void modifier_infos_ID(Liste*li,int *nbt){
+    int ID,*pos;
+    EtudiantRepere*courant=li->tete;
+    printf("veuuller saisir l identifiant de l'etu que vouler modifier ");
+    scanf("%d",&ID);
+    pos=Recherche_et_Affichage_des_Informations_identifiant(li,ID,&nbt);
+    for(int i=0;i<pos;i++){
+    courant=courant->suivant;}
+    EtudiantRepere* temp=courant->suivant;
+    Suprimer_Etudiant(li,pos);
+    courant=Creer_Etudiant();
+    courant->suivant=temp;
+    li->nef++;
+    }
 void afficherEtudiant(EtudiantRepere* E) {
     printf("Identifiant: %d\nNom: %s\nPrenom: %s\nAge: %d ans, ne le %d/%d/%d\n", E->Id, E->nom, E->prenom, E->age, E->date.jour, E->date.mois, E->date.annee);
     for (int i = 0; i < NBR_NOTES; i++) {
@@ -342,7 +356,8 @@ void afficher_menu() {
     printf("2. Afficher la liste d'etudiants\n");
     printf("3. Supprimer un etudiant\n");
     printf("4. chercher un etudiant\n");
-    printf("5. Quitter\n");
+    printf("5. modifier un etudiant\n");
+    printf("6. Quitter\n");
     printf("Choisissez une option: ");
 }
 void afficher_menu_recherche(){
@@ -423,13 +438,18 @@ int main (){
                     break;
                 }
             }while (k!=4);
+            break;
             case 5:
+            int nbt=0
+            modifier_infos_ID(liste,nbt)
+            break;
+            case 6:
             printf("Au revoir");
             break;
             default:
             printf("Option invalide, veuillez reessayer.\n");
             break;
         }
-    }while (C != 5);
+    }while (C != 6);
     return 0;
 }
