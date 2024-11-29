@@ -259,7 +259,7 @@ int Recherche_et_Affichage_des_Informations_identifiant(Liste* li ,int ID) {
             }
     return pos;
 }
-EtudiantRepere* modifier_infor(Liste* li) {
+EtudiantRepere* modifier_Etudiant_ID(Liste* li) {
     int ID;
     printf("Veuillez saisir l'identifiant de l'étudiant que vous souhaitez modifier: ");
     scanf("%d", &ID);
@@ -448,7 +448,7 @@ int main (){
             }while (k!=4);
             break;
             case 5:
-            modifier_infor(liste);
+            modifier_Etudiant_ID(liste);
             break;
             case 6:
             printf("Au revoir");
