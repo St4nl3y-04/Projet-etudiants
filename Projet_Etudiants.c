@@ -210,28 +210,6 @@ void Suprimer_Etudiant(Liste* li, int pos){
     printf("L'etudiant de position %d est supprime avec succes.\n", pos);
     li->nef--;
 }
-void Modifier_Etudiant(Liste* li, int pos) {
-    if (li == NULL || li->tete == NULL) {
-        printf("Liste vide ou invalide.\n");
-        return;
-    }
-    EtudiantRepere* Courant = li->tete;
-    // Parcourt jusqu'à la position (1-based index)
-    for (int i = 1; Courant != NULL && i < pos; i++) {
-        Courant = Courant->suivant;
-    }
-    if (Courant == NULL) {
-        printf("Position invalide. Aucun étudiant n'a été modifié.\n");
-        return;
-    }
-    // Modifier les informations de l'étudiant à la position
-    EtudiantRepere *temp=Courant->suivant;
-    Courant = Creer_Etudiant();
-    Courant->suivant=temp; // Copier les données du nouvel étudiant
-    printf("L'etudiant a la position %d a ete modifie avec succes.\n", pos);
-    creer_fichier_txt();
-    enregistrer_liste_etudiant(li);
-}
 int* Recherche_et_Affichage_des_Informations_nom(Liste* li ,char*nom,int *nbt) {
     EtudiantRepere *courant=li->tete;
     int found=0;
@@ -280,6 +258,35 @@ int Recherche_et_Affichage_des_Informations_identifiant(Liste* li ,int ID) {
             return 0;
             }
     return pos;
+}
+EtudiantRepere* modifier_infor(Liste* li) {
+    int ID;
+    printf("Veuillez saisir l'identifiant de l'étudiant que vous souhaitez modifier: ");
+    scanf("%d", &ID);
+    int position = Recherche_et_Affichage_des_Informations_identifiant(li, ID);
+    if (position == 0) {
+        printf("Etudiant non trouve.\n");
+        return NULL;
+    }
+    EtudiantRepere* courant = li->tete;
+    for (int i = 1; i < position; i++) { 
+        courant = courant->suivant;
+    }
+    printf("Modification des informations de l'étudiant:\n");
+    fflush(stdin); //vider le tampon
+    printf("Entrez le nom de l'etudiant :");
+    fgets(courant->nom,50, stdin); 
+    courant->nom[strcspn(courant->nom,"\n")] = '\0';
+    printf("Entrez le prenom de l'etudiant :");
+    fgets(courant->prenom,50, stdin); // Lire le prenom, même s'il contient des espaces
+    courant->prenom[strcspn(courant->prenom, "\n")] = '\0'; // Retirer le caractère '\n' ajouté par fgets
+    printf("Entrez la date de naissance (jour mois annee) :");
+    scanf("%d %d %d", &courant->date.jour, &courant->date.mois, &courant->date.annee);
+    courant->age = calculerAge(courant);
+    printf("Les informations ont été modifiées avec succès.\n");
+    creer_fichier_txt ();
+    enregistrer_liste_etudiant(li);
+    return courant;
 }
 int* Recherche_et_Affichage_des_Informations_age(Liste* li ,int age,int* nbt) {
 EtudiantRepere *courant=li->tete;
@@ -441,13 +448,7 @@ int main (){
             }while (k!=4);
             break;
             case 5:
-            printf("saisire l'identifiant de l'etudiant que vous vouler modifier: ");
-            int ID;
-            scanf("%d",&ID);
-            int po=Recherche_et_Affichage_des_Informations_identifiant(liste,ID);
-            if(po != 0){
-                Modifier_Etudiant(liste,po);
-            }
+            modifier_infor(liste);
             break;
             case 6:
             printf("Au revoir");
