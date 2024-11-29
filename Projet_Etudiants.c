@@ -210,6 +210,28 @@ void Suprimer_Etudiant(Liste* li, int pos){
     printf("L'etudiant de position %d est supprime avec succes.\n", pos);
     li->nef--;
 }
+void Modifier_Etudiant(Liste* li, int pos) {
+    if (li == NULL || li->tete == NULL) {
+        printf("Liste vide ou invalide.\n");
+        return;
+    }
+    EtudiantRepere* Courant = li->tete;
+    // Parcourt jusqu'à la position (1-based index)
+    for (int i = 1; Courant != NULL && i < pos; i++) {
+        Courant = Courant->suivant;
+    }
+    if (Courant == NULL) {
+        printf("Position invalide. Aucun étudiant n'a été modifié.\n");
+        return;
+    }
+    // Modifier les informations de l'étudiant à la position
+    EtudiantRepere *temp=Courant->suivant;
+    Courant = Creer_Etudiant();
+    Courant->suivant=temp; // Copier les données du nouvel étudiant
+    printf("L'etudiant a la position %d a ete modifie avec succes.\n", pos);
+    creer_fichier_txt();
+    enregistrer_liste_etudiant(li);
+}
 int* Recherche_et_Affichage_des_Informations_nom(Liste* li ,char*nom,int *nbt) {
     EtudiantRepere *courant=li->tete;
     int found=0;
@@ -238,34 +260,26 @@ int* Recherche_et_Affichage_des_Informations_nom(Liste* li ,char*nom,int *nbt) {
         }
 return pos;
 }
-int* Recherche_et_Affichage_des_Informations_identifiant(Liste* li ,int ID, int* nbt) {
-EtudiantRepere *courant=li->tete;
-int found=0;
-int i=1;
-(*nbt)=0;
-int* pos=NULL;
-while(courant!=NULL){
-    if(courant-> Id==ID){
-        printf("les informations de l etu avec identifiant %d sont \n",ID);
-        afficherEtudiant(courant);
-        found=1;
-        pos=realloc(pos,((*nbt)+1)*sizeof(int));
-            if (pos == NULL) {
-                perror("Erreur de realloc");
-                free(pos); // Libérer la mémoire précédemment allouée
-                return NULL;
+int Recherche_et_Affichage_des_Informations_identifiant(Liste* li ,int ID) {
+    EtudiantRepere *courant=li->tete;
+    int found=0;
+    int i=1;
+    int pos=0;
+    while(courant!=NULL){
+        if(courant-> Id==ID){
+            printf("les informations de l etu avec identifiant %d sont \n",ID);
+            afficherEtudiant(courant);
+            found=1;
+            pos=i;
             }
-            pos[*nbt]=i;
-            (*nbt)++;
+            i++;
+            courant=courant->suivant;  
         }
-        i++;
-        courant=courant->suivant;  
-    }
-    if(!found){
-        printf("l etu n existe pas dans la base");
-    return NULL;
-        }
-return pos;
+        if(!found){
+            printf("l etu n existe pas dans la base");
+            return 0;
+            }
+    return pos;
 }
 int* Recherche_et_Affichage_des_Informations_age(Liste* li ,int age,int* nbt) {
 EtudiantRepere *courant=li->tete;
@@ -342,7 +356,8 @@ void afficher_menu() {
     printf("2. Afficher la liste d'etudiants\n");
     printf("3. Supprimer un etudiant\n");
     printf("4. chercher un etudiant\n");
-    printf("5. Quitter\n");
+    printf("5. Modifier un etudiant\n");
+    printf("6. Quitter\n");
     printf("Choisissez une option: ");
 }
 void afficher_menu_recherche(){
@@ -378,7 +393,7 @@ int main (){
             afficher_liste_Etudiant(liste);
             break;
             case 3:
-            printf("veuiller saisir le nom de l etu que souhaiter chercher: ");
+            printf("veuiller saisir le nom de l etu que souhaiter suprimer: ");
             int nbt=0;
             int* pos=NULL;
             scanf("%s",nom);
@@ -412,8 +427,9 @@ int main (){
                     case 3:
                     printf("saisire l'identifiant de l'etudiant que vous vouler chercher: ");
                     scanf("%d",&iden);
-                    pos = Recherche_et_Affichage_des_Informations_identifiant(liste,iden,&nbt);
-                    Rech_Pos_Occ(pos,nbt);
+                    int position;
+                    position = Recherche_et_Affichage_des_Informations_identifiant(liste,iden);
+                    printf("La position de cet etudiant est: %d",position);
                     break;
                     case 4:
                     printf("Au revoir");
@@ -423,13 +439,23 @@ int main (){
                     break;
                 }
             }while (k!=4);
+            break;
             case 5:
+            printf("saisire l'identifiant de l'etudiant que vous vouler modifier: ");
+            int ID;
+            scanf("%d",&ID);
+            int po=Recherche_et_Affichage_des_Informations_identifiant(liste,ID);
+            if(po != 0){
+                Modifier_Etudiant(liste,po);
+            }
+            break;
+            case 6:
             printf("Au revoir");
             break;
             default:
             printf("Option invalide, veuillez reessayer.\n");
             break;
         }
-    }while (C != 5);
+    }while (C != 6);
     return 0;
 }
