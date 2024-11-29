@@ -342,7 +342,8 @@ void afficher_menu() {
     printf("2. Afficher la liste d'etudiants\n");
     printf("3. Supprimer un etudiant\n");
     printf("4. chercher un etudiant\n");
-    printf("5. Quitter\n");
+    printf("5. modifier data d etudiant\n");
+    printf("6. Quitter\n");
     printf("Choisissez une option: ");
 }
 void afficher_menu_recherche(){
@@ -361,22 +362,41 @@ void Rech_Pos_Occ(int *pos, const int nbt){
         }
     }
 }
-void modifier_infor(Liste*li){
-    int ID,pos;
-    EtudiantRepere*courant=li->tete;
-printf("veuuller saisir l identifiant de l'etu que vouler modifier ");
-scanf("%d",&ID);
-pos=Recherche_et_Affichage_des_Informations_identifiant(li,ID);
-for(int i=0;i<pos;i++){
-    courant=courant->suivant;}
-    EtudiantRepere* temp=courant->suivant;
-    Suprimer_Etudiant(li,pos);
-    courant=Creer_Etudiant();
-    courant->suivant=temp;
-    li->nef++;
+
+EtudiantRepere* modifier_infor(Liste* li) {
+    int ID, nbt;
+    printf("Veuillez saisir l'identifiant de l'étudiant que vous souhaitez modifier: ");
+    scanf("%d", &ID);
+    int* positions = Recherche_et_Affichage_des_Informations_identifiant(li, ID, &nbt);
+    
+    if (positions == NULL || nbt == 0) {
+        printf("Étudiant non trouvé.\n");
+        return;
     }
 
+    EtudiantRepere* courant = li->tete;
+    for (int i = 1; i < positions[0]; i++) { 
+        courant = courant->suivant;
+    }
+
+    printf("Modification des informations de l'étudiant:\n");
+    printf("Entrez le nouveau nom: ");
+    scanf(" %[^\n]", courant->nom);
+    printf("Entrez le nouveau prénom: ");
+    scanf(" %[^\n]", courant->prenom);
+    printf("Entrez la nouvelle date de naissance (jour mois année): ");
+    scanf("%d %d %d", &courant->date.jour, &courant->date.mois, &courant->date.annee);
+    courant->age = calculerAge(courant);
+
+    courant->Moy = calculer_Moyenne(courant);
+    free(positions); // Libérer la mémoire
+    printf("Les informations ont été modifiées avec succès.\n");
+    creer_fichier_txt ();
+    enregistrer_liste_etudiant(li);
+    return courant;
 }
+
+
 int main (){
     int C,k, iden, agee;
     char nom[50];     
@@ -435,6 +455,9 @@ int main (){
                 }
             }while (k!=4);
             case 5:
+            modifier_infor(liste);
+            break;
+            case 6:
             printf("Au revoir");
             break;
             default:
