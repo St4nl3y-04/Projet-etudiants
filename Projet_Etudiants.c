@@ -210,47 +210,91 @@ void Suprimer_Etudiant(Liste* li, int pos){
     printf("L'etudiant de position %d est supprime avec succes.\n", pos);
     li->nef--;
 }
-void Recherche_et_Affichage_des_Informations_nom(Liste* li ,char*nom) {
+int* Recherche_et_Affichage_des_Informations_nom(Liste* li ,char*nom,int *nbt) {
     EtudiantRepere *courant=li->tete;
     int found=0;
+    int i=1;
+    (*nbt)=0;
+    int* pos=NULL;
     while(courant!=NULL){
         if(strcmp(courant->nom,nom)==0){
             printf("les informations de l etu avec le nom %s sont \n",nom);
             afficherEtudiant(courant);
-            found=1;}
+            found=1;
+            pos=realloc(pos,((*nbt)+1)*sizeof(int));
+            if (pos == NULL) {
+                perror("Erreur de realloc");
+                free(pos); // Libérer la mémoire précédemment allouée
+                return NULL;
+            }
+            pos[*nbt]=i;
+            (*nbt)++;
+            }
+            i++;
         courant=courant->suivant;}
         if (!found){
             printf("l'etu n existe pas dans la base");
+            return NULL;
         }
-
+return pos;
 }
-void Recherche_et_Affichage_des_Informations_identifiant(Liste* li ,int ID) {
+int* Recherche_et_Affichage_des_Informations_identifiant(Liste* li ,int ID, int* nbt) {
 EtudiantRepere *courant=li->tete;
 int found=0;
-while(courant->suivant!=NULL){
+int i=1;
+(*nbt)=0;
+int* pos=NULL;
+while(courant!=NULL){
     if(courant-> Id==ID){
         printf("les informations de l etu avec identifiant %d sont \n",ID);
         afficherEtudiant(courant);
-        found=1;}
+        found=1;
+        pos=realloc(pos,((*nbt)+1)*sizeof(int));
+            if (pos == NULL) {
+                perror("Erreur de realloc");
+                free(pos); // Libérer la mémoire précédemment allouée
+                return NULL;
+            }
+            pos[*nbt]=i;
+            (*nbt)++;
+        }
+        i++;
         courant=courant->suivant;  
     }
     if(!found){
         printf("l etu n existe pas dans la base");
-    }
+    return NULL;
+        }
+return pos;
 }
-void Recherche_et_Affichage_des_Informations_age(Liste* li ,int age) {
+int* Recherche_et_Affichage_des_Informations_age(Liste* li ,int age,int* nbt) {
 EtudiantRepere *courant=li->tete;
 int found=0;
+int i=1;
+(*nbt)=0;
+int* pos=NULL;
 while(courant->suivant!=NULL){
     if(courant->age==age){
         printf("les informations de l etu qui a l age %d sont \n",age);
         afficherEtudiant(courant);
-        found=1;}
+        found=1;
+        pos=realloc(pos,((*nbt)+1)*sizeof(int));
+            if (pos == NULL) {
+                perror("Erreur de realloc");
+                free(pos); // Libérer la mémoire précédemment allouée
+                return NULL;
+            }
+            pos[*nbt]=i;
+            (*nbt)++;
+        }
+        i++;
         courant=courant->suivant;
     }
     if(!found){
         printf("l etu n existe pas dans la base");
+        return NULL;
     }
+return pos;
 }
 Liste* lire_fichier_txt () {
     FILE *F=fopen("pEtudiants.txt","r");
@@ -306,7 +350,7 @@ void afficher_menu_recherche(){
     printf("1. chercher par nom\n");
     printf("2. chercher par age\n");
     printf("3. chercher par identifiant\n");
-    printf("4. quitter\n");
+    printf("4. Quitter le menu de recherche vers menu principale\n");
     printf("Choisissez une option: ");
 }
 int main (){
@@ -338,20 +382,24 @@ int main (){
                 afficher_menu_recherche();
                 scanf("%d",&k);
                 switch(k){
+                    int nbt=0;
                     case 1:
                     printf("veuiller saisir le nom de l etu que souhaiter chercher ");
                     scanf("%s",nom);
-                    Recherche_et_Affichage_des_Informations_nom(liste,nom);
+                    Recherche_et_Affichage_des_Informations_nom(liste,nom,&nbt);
+                    printf("Nombre d'etudiants trouvée: %d", nbt);
                     break;
                     case 2:
                     printf("saisire l age de l'etu que vous vouler chercher sur lui");
                     scanf("%d",&agee);
-                    Recherche_et_Affichage_des_Informations_age(liste,agee);
+                    Recherche_et_Affichage_des_Informations_age(liste,agee,&nbt);
+                    printf("Nombre d'etudiants trouvée: %d", nbt);
                     break;
                     case 3:
-                    printf("saisire l identifiant de l'etu que vous vouler chercher sur lui");
+                    printf("saisire l'identifiant de l'etudiant que vous vouler chercher: ");
                     scanf("%d",&iden);
-                    Recherche_et_Affichage_des_Informations_identifiant(liste,iden);
+                    Recherche_et_Affichage_des_Informations_identifiant(liste,iden,&nbt);
+                    printf("Nombre d'etudiants trouvée: %d", nbt);
                     break;
                     case 4:
                     printf("Au revoir");
