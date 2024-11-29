@@ -273,6 +273,8 @@ EtudiantRepere* modifier_Etudiant_ID(Liste* li) {
         courant = courant->suivant;
     }
     printf("Modification des informations de l'étudiant:\n");
+    printf("Entrez l'identifiant de l'etudiant: ");
+    scanf("%d", &courant->Id);
     fflush(stdin); //vider le tampon
     printf("Entrez le nom de l'etudiant :");
     fgets(courant->nom,50, stdin); 
