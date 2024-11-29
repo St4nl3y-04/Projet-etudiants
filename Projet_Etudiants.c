@@ -353,6 +353,14 @@ void afficher_menu_recherche(){
     printf("4. Quitter le menu de recherche vers menu principale\n");
     printf("Choisissez une option: ");
 }
+void Rech_Pos_Occ(int *pos, const int nbt){
+    if(nbt != 0){
+        printf("Nombre d'etudiants trouvée: %d", nbt);
+        for(int i=0;i<nbt;i++){
+            printf("\nLa postion de l'etudinat n '%d' trouvee est: %d",i+1,pos[i]);
+        }
+    }
+}
 int main (){
     int C,k, iden, agee;
     char nom[50];     
@@ -383,29 +391,24 @@ int main (){
                 scanf("%d",&k);
                 switch(k){
                     int nbt=0;
+                    int* pos=NULL;
                     case 1:
                     printf("veuiller saisir le nom de l etu que souhaiter chercher ");
                     scanf("%s",nom);
-                    Recherche_et_Affichage_des_Informations_nom(liste,nom,&nbt);
-                    printf("Nombre d'etudiants trouvée: %d", nbt);
+                    pos=Recherche_et_Affichage_des_Informations_nom(liste,nom,&nbt);
+                    Rech_Pos_Occ(pos,nbt);
                     break;
                     case 2:
                     printf("saisire l age de l'etu que vous vouler chercher sur lui");
                     scanf("%d",&agee);
-                    Recherche_et_Affichage_des_Informations_age(liste,agee,&nbt);
-                    printf("Nombre d'etudiants trouvée: %d", nbt);
+                    pos=Recherche_et_Affichage_des_Informations_age(liste,agee,&nbt);
+                    Rech_Pos_Occ(pos,nbt);
                     break;
                     case 3:
                     printf("saisire l'identifiant de l'etudiant que vous vouler chercher: ");
                     scanf("%d",&iden);
-                    int* pos = Recherche_et_Affichage_des_Informations_identifiant(liste,iden,&nbt);
-                    printf("Nombre d'etudiants trouvée: %d", nbt);
-                    if(nbt != 0){
-                        printf("Les position des etudiants trouvee sont");
-                        for(int i=0;i<nbt;i++){
-                            printf("\nLa postion de l'etudinat n %d trouver est :%d",i+1,pos[i]);
-                        }
-                    }
+                    pos = Recherche_et_Affichage_des_Informations_identifiant(liste,iden,&nbt);
+                    Rech_Pos_Occ(pos,nbt);
                     break;
                     case 4:
                     printf("Au revoir");
