@@ -98,7 +98,7 @@ EtudiantRepere * Creer_Etudiant(){
     EtudiantRepere *P=(EtudiantRepere*)malloc(sizeof(EtudiantRepere));
     printf("\nEntrez l'identifiant de l'etudiant :");
     scanf(" %d", &P->Id);
-    fflush(stdin);//vider le tampon
+    fflush(stdin); //vider le tampon
     printf("Entrez le nom de l'etudiant :");
     fgets(P->nom,50, stdin); 
     P->nom[strcspn(P->nom,"\n")] = '\0';
@@ -273,7 +273,7 @@ int found=0;
 int i=1;
 (*nbt)=0;
 int* pos=NULL;
-while(courant->suivant!=NULL){
+while(courant!=NULL){
     if(courant->age==age){
         printf("les informations de l etu qui a l age %d sont \n",age);
         afficherEtudiant(courant);
@@ -315,7 +315,7 @@ Liste* lire_fichier_txt () {
             return li; // On retourne la liste partiellement construite
         }
         int notesStartIndex = 0;
-        sscanf(buffer,"%d\t| %s\t| %s\t| %i\t| %d/%d/%d\t|%n", &P->Id, P->nom, P->prenom, &P->age, &P->date.jour, &P->date.mois,&P->date.annee, &notesStartIndex);
+        sscanf(buffer,"%d\t| %[^\t|]\t| %[^\t|]\t| %i\t| %d/%d/%d\t|%n", &P->Id, P->nom, P->prenom, &P->age, &P->date.jour, &P->date.mois,&P->date.annee, &notesStartIndex);
         char* notesData = buffer + notesStartIndex;
         for (int i=0; i<NBR_NOTES;i++){
             sscanf(notesData, "%f/20\t| %n", &P->note[i].valeur, &notesStartIndex);
@@ -378,10 +378,15 @@ int main (){
             afficher_liste_Etudiant(liste);
             break;
             case 3:
-            printf("Veuillez saisir la position de l'etudiant que vous souhaiter supprimer: \n");
-            int f;
-            scanf("%d", &f);
-            Suprimer_Etudiant(liste,f);
+            printf("veuiller saisir le nom de l etu que souhaiter chercher: ");
+            int nbt=0;
+            int* pos=NULL;
+            scanf("%s",nom);
+            pos=Recherche_et_Affichage_des_Informations_nom(liste,nom,&nbt);
+            Rech_Pos_Occ(pos,nbt);
+            for(int i=0;i<nbt;i++){
+                Suprimer_Etudiant(liste,pos[i]);
+            }
             creer_fichier_txt();
             enregistrer_liste_etudiant(liste);
             break;
