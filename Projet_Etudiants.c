@@ -398,8 +398,14 @@ int main (){
                     case 3:
                     printf("saisire l'identifiant de l'etudiant que vous vouler chercher: ");
                     scanf("%d",&iden);
-                    Recherche_et_Affichage_des_Informations_identifiant(liste,iden,&nbt);
+                    int* pos = Recherche_et_Affichage_des_Informations_identifiant(liste,iden,&nbt);
                     printf("Nombre d'etudiants trouvée: %d", nbt);
+                    if(nbt != 0){
+                        printf("Les position des etudiants trouvee sont");
+                        for(int i=0;i<nbt;i++){
+                            printf("\nLa postion de l'etudinat n %d trouver est :%d",i+1,pos[i]);
+                        }
+                    }
                     break;
                     case 4:
                     printf("Au revoir");
