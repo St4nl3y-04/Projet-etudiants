@@ -464,6 +464,6 @@ int main (){
             printf("Option invalide, veuillez reessayer.\n");
             break;
         }
-    }while (C != 5);
+    }while (C != 6);
     return 0;
 }
