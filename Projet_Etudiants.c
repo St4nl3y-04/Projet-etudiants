@@ -366,7 +366,8 @@ void afficher_menu() {
     printf("3. Supprimer un etudiant\n");
     printf("4. chercher un etudiant\n");
     printf("5. Modifier un etudiant\n");
-    printf("6. Quitter le programme\n");
+    printf("6. Generer un Rapport academique.\n");
+    printf("7. Quitter le programme\n");
     printf("Choisissez une option: ");
 }
 void afficher_menu_recherche(){
@@ -386,11 +387,15 @@ void Rech_Pos_Occ(int *pos, const int nbt){
         }
     }
 }
-float *calculer_Moyenne_Module_Rapport(Liste* li){
-    EtudiantRepere* courant=li->tete;
+float* calculer_Moyenne_Module_Rapport(Liste* li){
     float *Moy=(float*)malloc(NBR_NOTES*(sizeof(float)));
-    float S=0;
+    if (Moy == NULL) {
+        perror("Erreur d'allocation memoire pour les moyennes.");
+        return NULL;
+    }
     for (int i=0;i<NBR_NOTES;i++){
+        float S=0;
+        EtudiantRepere* courant=li->tete;
         while (courant!=NULL){
             S+=courant->note[i].valeur;
             courant=courant->suivant;
@@ -401,10 +406,11 @@ float *calculer_Moyenne_Module_Rapport(Liste* li){
 } 
 float calculer_Moyenne_Generale_Rapport(Liste* li){
     EtudiantRepere* courant=li->tete;
-    float MoyGen;
+    float MoyGen=0;
     float S=0;
     while (courant!=NULL){
         S+=courant->Moy;
+        courant=courant->suivant;
     }
     MoyGen=S/li->nef;
     return MoyGen;
@@ -412,20 +418,20 @@ float calculer_Moyenne_Generale_Rapport(Liste* li){
 void Generer_Rapport_Academique(Liste* li){
     FILE* fichier=fopen("Rapport_Academique.txt","w");
     fprintf(fichier,"Le rapport académique de la filière GI1: \n");
-    EtudiantRepere *P;
-    Libelle_notes(P);
+    EtudiantRepere P;
+    Libelle_notes(&P);
     float* MoyMod=calculer_Moyenne_Module_Rapport(li);
     for (int i=0;i<NBR_NOTES;i++){
-        fprintf(fichier,"%s :%.2f/20\n",P->note[i].libelle,MoyMod[i]);
+        fprintf(fichier,"%s :%.2f/20\n",P.note[i].libelle,MoyMod[i]);
     }
-    fprintf(fichier,"La moyenne generale du filière est: %.2f/f", calculer_Moyenne_Generale_Rapport(li));
+    fprintf(fichier,"La moyenne generale du filière est: %.2f\n", calculer_Moyenne_Generale_Rapport(li));
     fclose(fichier);
+    free(MoyMod);
 }
 int main (){
     int C,k, iden, agee;
-    char nom[50];     
+    char nom[50];   
     Liste* liste = lire_fichier_txt();
-    Generer_Rapport_Academique(liste);
     do{
         afficher_menu();
         scanf("%d",&C);
@@ -482,7 +488,7 @@ int main (){
                     printf("La position de cet etudiant est: %d",position);
                     break;
                     case 5:
-                    C=6;
+                    C=7;
                     printf("Au revoir");
                     break;
                     default:
@@ -494,13 +500,16 @@ int main (){
             case 5:
             modifier_Etudiant_ID(liste);
             break;
-            case 6:
+            case 6: 
+            Generer_Rapport_Academique(liste);
+            break;
+            case 7:
             printf("Au revoir");
             break;
             default:
             printf("Option invalide, veuillez reessayer.\n");
             break;
         }
-    }while (C != 6);
+    }while (C != 7);
     return 0;
 }//topsis excel 
