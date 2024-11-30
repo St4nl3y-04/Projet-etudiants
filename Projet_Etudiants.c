@@ -371,7 +371,7 @@ EtudiantRepere* modifier_infor(Liste* li) {
     
     if (positions == NULL || nbt == 0) {
         printf("Étudiant non trouvé.\n");
-        return;
+        return NULL;
     }
 
     EtudiantRepere* courant = li->tete;
@@ -380,14 +380,26 @@ EtudiantRepere* modifier_infor(Liste* li) {
     }
 
     printf("Modification des informations de l'étudiant:\n");
+     printf("Entrez le nouveau identifiant: ");
+    scanf("%d",&courant->Id);
     printf("Entrez le nouveau nom: ");
     scanf(" %[^\n]", courant->nom);
     printf("Entrez le nouveau prénom: ");
     scanf(" %[^\n]", courant->prenom);
     printf("Entrez la nouvelle date de naissance (jour mois année): ");
     scanf("%d %d %d", &courant->date.jour, &courant->date.mois, &courant->date.annee);
+    for (int i = 0; i < NBR_NOTES; i++) { 
+        Libelle_notes(courant);
+        do{
+            printf("Entrez la note pour %s : ", courant->note[i].libelle); 
+            scanf("%f", &courant->note[i].valeur); 
+            if ((courant->note[i].valeur>20) || (courant->note[i].valeur<0)){
+                printf("Veuillez Saisir une note entre 0 et 20.\n");
+            }
+        }while ((courant->note[i].valeur>20) || (courant->note[i].valeur<0));
+    }
     courant->age = calculerAge(courant);
-
+    
     courant->Moy = calculer_Moyenne(courant);
     free(positions); // Libérer la mémoire
     printf("Les informations ont été modifiées avec succès.\n");
