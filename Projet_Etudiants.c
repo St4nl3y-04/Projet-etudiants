@@ -120,6 +120,7 @@ EtudiantRepere * Creer_Etudiant(){
     }
     P->Moy=calculer_Moyenne(P);
     P->suivant=NULL;
+    bultane_etu(P);
     return P;
 }
 void afficherEtudiant(EtudiantRepere* E) {
