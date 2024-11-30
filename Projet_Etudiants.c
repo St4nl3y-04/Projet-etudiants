@@ -146,7 +146,7 @@ void afficher_liste_Etudiant (Liste* li){
     P = li->tete;
     printf("\nLa liste des etudiants avec leurs details\n:");
     while (P!=NULL){
-        printf("Identifiant: %d\nNom: %s\nPrenom: %s\nAge: %d ans , ne le %d/%d/%d \n",P->Id, P->nom, P->prenom, P->age, P->date.jour, P->date.mois,P->date.annee);
+        printf("Identifiant: %d\nNom: %s\nPrenom: %s\nAge: %d ans , ne le %02d/%02d/%04d \n",P->Id, P->nom, P->prenom, P->age, P->date.jour, P->date.mois,P->date.annee);
         for (int i = 0; i < NBR_NOTES; i++) { 
             printf("Note en %s : %.2f/20\n", P->note[i].libelle, P->note[i].valeur);
         }
@@ -178,7 +178,7 @@ void enregistrer_liste_etudiant(Liste* li) { // fonction pour enregistrer les et
     }
     EtudiantRepere* P = li->tete;
     while (P != NULL) {
-        fprintf(fichier, "%d\t| %s\t| %s\t| %i\t| %d/%d/%d\t|", P->Id, P->nom, P->prenom, P->age, P->date.jour, P->date.mois,P->date.annee);
+        fprintf(fichier, "%d\t| %s\t| %s\t| %i\t| %02d/%02d/%02d\t|", P->Id, P->nom, P->prenom, P->age, P->date.jour, P->date.mois,P->date.annee);
         for (int i = 0; i < NBR_NOTES; i++) {
             fprintf(fichier, "%.2f/20\t| ", P->note[i].valeur);
         }
@@ -468,4 +468,4 @@ int main (){
         }
     }while (C != 6);
     return 0;
-}
+}//topsis excel 
