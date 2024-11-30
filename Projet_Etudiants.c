@@ -512,4 +512,3 @@ int main (){
         }
     }while (C != 7);
     return 0;
-}//topsis excel 
