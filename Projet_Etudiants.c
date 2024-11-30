@@ -366,7 +366,7 @@ void afficher_menu() {
     printf("3. Supprimer un etudiant\n");
     printf("4. chercher un etudiant\n");
     printf("5. Modifier un etudiant\n");
-    printf("6. Quitter\n");
+    printf("6. Quitter le programme\n");
     printf("Choisissez une option: ");
 }
 void afficher_menu_recherche(){
@@ -375,6 +375,7 @@ void afficher_menu_recherche(){
     printf("2. chercher par age\n");
     printf("3. chercher par identifiant\n");
     printf("4. Quitter le menu de recherche vers menu principale\n");
+    printf("5. Quitter le programme\n");
     printf("Choisissez une option: ");
 }
 void Rech_Pos_Occ(int *pos, const int nbt){
@@ -405,7 +406,9 @@ int main (){
             printf("veuiller saisir le nom de l etu que souhaiter suprimer: ");
             int nbt=0;
             int* pos=NULL;
-            scanf("%s",nom);
+            fflush(stdin); //vider le tampon
+            fgets(nom,50, stdin);
+            nom[strcspn(nom,"\n")] = '\0';
             pos=Recherche_et_Affichage_des_Informations_nom(liste,nom,&nbt);
             Rech_Pos_Occ(pos,nbt);
             for(int i=0;i<nbt;i++){
@@ -422,8 +425,10 @@ int main (){
                     int nbt=0;
                     int* pos=NULL;
                     case 1:
+                    fflush(stdin);
                     printf("veuiller saisir le nom de l etu que souhaiter chercher ");
-                    scanf("%s",nom);
+                    fgets(nom,50, stdin);
+                    nom[strcspn(nom,"\n")] = '\0';
                     pos=Recherche_et_Affichage_des_Informations_nom(liste,nom,&nbt);
                     Rech_Pos_Occ(pos,nbt);
                     break;
@@ -440,14 +445,15 @@ int main (){
                     position = Recherche_et_Affichage_des_Informations_identifiant(liste,iden);
                     printf("La position de cet etudiant est: %d",position);
                     break;
-                    case 4:
+                    case 5:
+                    C=6;
                     printf("Au revoir");
                     break;
                     default:
                     printf("Option invalide, veuillez reessayer.\n");
                     break;
                 }
-            }while (k!=4);
+            }while (k!=4 && k!=5);
             break;
             case 5:
             modifier_Etudiant_ID(liste);
