@@ -145,7 +145,7 @@ void afficher_liste_Etudiant (Liste* li){
     P = li->tete;
     printf("\nLa liste des etudiants avec leurs details\n:");
     while (P!=NULL){
-        printf("Identifiant: %d\nNom: %s\nPrenom: %s\nAge: %d ans , ne le %02d/%02d/%vvvd \n",P->Id, P->nom, P->prenom, P->age, P->date.jour, P->date.mois,P->date.annee);
+        printf("Identifiant: %d\nNom: %s\nPrenom: %s\nAge: %d ans , ne le %02d/%02d/%04d \n",P->Id, P->nom, P->prenom, P->age, P->date.jour, P->date.mois,P->date.annee);
         for (int i = 0; i < NBR_NOTES; i++) { 
             printf("Note en %s : %.2f/20\n", P->note[i].libelle, P->note[i].valeur);
         }
