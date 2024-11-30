@@ -386,10 +386,46 @@ void Rech_Pos_Occ(int *pos, const int nbt){
         }
     }
 }
+float *calculer_Moyenne_Module_Rapport(Liste* li){
+    EtudiantRepere* courant=li->tete;
+    float *Moy=(float*)malloc(NBR_NOTES*(sizeof(float)));
+    float S=0;
+    for (int i=0;i<NBR_NOTES;i++){
+        while (courant!=NULL){
+            S+=courant->note[i].valeur;
+            courant=courant->suivant;
+        }
+        Moy[i]=S/(li->nef);
+    }
+    return Moy;
+} 
+float calculer_Moyenne_Generale_Rapport(Liste* li){
+    EtudiantRepere* courant=li->tete;
+    float MoyGen;
+    float S=0;
+    while (courant!=NULL){
+        S+=courant->Moy;
+    }
+    MoyGen=S/li->nef;
+    return MoyGen;
+}
+void Generer_Rapport_Academique(Liste* li){
+    FILE* fichier=fopen("Rapport_Academique.txt","w");
+    fprintf(fichier,"Le rapport académique de la filière GI1: \n");
+    EtudiantRepere *P;
+    Libelle_notes(P);
+    float* MoyMod=calculer_Moyenne_Module_Rapport(li);
+    for (int i=0;i<NBR_NOTES;i++){
+        fprintf(fichier,"%s :%.2f/20\n",P->note[i].libelle,MoyMod[i]);
+    }
+    fprintf(fichier,"La moyenne generale du filière est: %.2f/f", calculer_Moyenne_Generale_Rapport(li));
+    fclose(fichier);
+}
 int main (){
     int C,k, iden, agee;
     char nom[50];     
     Liste* liste = lire_fichier_txt();
+    Generer_Rapport_Academique(liste);
     do{
         afficher_menu();
         scanf("%d",&C);
