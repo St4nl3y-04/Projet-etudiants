@@ -120,6 +120,7 @@ EtudiantRepere * Creer_Etudiant(){
     }
     P->Moy=calculer_Moyenne(P);
     P->suivant=NULL;
+    bultane_etu(P);
     return P;
 }
 void afficherEtudiant(EtudiantRepere* E) {
@@ -362,9 +363,23 @@ void Rech_Pos_Occ(int *pos, const int nbt){
         }
     }
 }
+void afficher_menu_modifier(EtudiantRepere*p) {
+    printf("\nMenu de modification des informations de l'étudiant :\n");
+    printf("1. Changer l'identifiant\n");
+    printf("2. Changer le nom\n");
+    printf("3. Changer le prénom\n");
+    printf("4. Changer l'âge\n");
+
+    // Affichage pour les 14 notes
+    for (int i = 0; i < NBR_NOTES; i++) {
+        printf("%d. Modifier la note %s\n", 5+i, p->note[i].libelle);
+    }
+    printf("19. Retour au menu principal\n");
+    printf("Veuillez choisir une option : ");
+}
 
 EtudiantRepere* modifier_infor(Liste* li) {
-    int ID, nbt;
+    int ID, nbt,l;
     printf("Veuillez saisir l'identifiant de l'étudiant que vous souhaitez modifier: ");
     scanf("%d", &ID);
     int* positions = Recherche_et_Affichage_des_Informations_identifiant(li, ID, &nbt);
@@ -378,26 +393,42 @@ EtudiantRepere* modifier_infor(Liste* li) {
     for (int i = 1; i < positions[0]; i++) { 
         courant = courant->suivant;
     }
-
-    printf("Modification des informations de l'étudiant:\n");
-     printf("Entrez le nouveau identifiant: ");
+    do{
+        afficher_menu_modifier(courant);
+        scanf("%d",&l);
+     printf("Modification des informations de l'étudiant:\n");
+    switch (l){
+      case 1:
+    printf("Entrez le nouveau identifiant: ");
     scanf("%d",&courant->Id);
+    break;
+    case 2:
     printf("Entrez le nouveau nom: ");
     scanf(" %[^\n]", courant->nom);
+    break;
+    case 3:
     printf("Entrez le nouveau prénom: ");
     scanf(" %[^\n]", courant->prenom);
+    break;
+    case 4:
     printf("Entrez la nouvelle date de naissance (jour mois année): ");
     scanf("%d %d %d", &courant->date.jour, &courant->date.mois, &courant->date.annee);
-    for (int i = 0; i < NBR_NOTES; i++) { 
-        Libelle_notes(courant);
-        do{
-            printf("Entrez la note pour %s : ", courant->note[i].libelle); 
-            scanf("%f", &courant->note[i].valeur); 
-            if ((courant->note[i].valeur>20) || (courant->note[i].valeur<0)){
-                printf("Veuillez Saisir une note entre 0 et 20.\n");
+    break;
+     case 19:
+            printf("Retour au menu principal.\n");
+            return;
+        default:
+            if (l >= 5 && l < 5 + NBR_NOTES) {
+                int index = l - 5;
+                printf("Entrez la nouvelle valeur pour la note %d (%s) : ", index + 1, courant->note[index].libelle);
+                scanf("%f", &courant->note[index].valeur);
+            } else {
+                printf("Option invalide.\n");
             }
-        }while ((courant->note[i].valeur>20) || (courant->note[i].valeur<0));
-    }
+            break;}
+    
+    
+    printf("Modification effectuée.\n");
     courant->age = calculerAge(courant);
     
     courant->Moy = calculer_Moyenne(courant);
@@ -406,6 +437,24 @@ EtudiantRepere* modifier_infor(Liste* li) {
     creer_fichier_txt ();
     enregistrer_liste_etudiant(li);
     return courant;
+     }while (l!=19);
+}
+void bultane_etu(EtudiantRepere*p){
+    char nom_fichier[100];
+     sprintf(nom_fichier, "%s_rapport.txt", p->nom);
+FILE*file=fopen(nom_fichier,"w");
+ if (file == NULL) {
+        printf("Erreur d'ouverture du fichier.\n");
+        return;
+    }
+fprintf(file,"identifiant: %d \n",p->Id);
+fprintf(file,"nom: %s \n",p->nom);
+fprintf(file,"prenom: %s \n",p->prenom);
+fprintf(file,"age: %d \n",p->age);
+for(int i=1;i<NBR_NOTES;i++){
+fprintf(file,"note %s: %.2f \n",p->note[i].libelle,p->note[i].valeur);}
+fprintf(file,"moyenne generale: %.2f \n",p->Moy);
+fclose(file);
 }
 
 
