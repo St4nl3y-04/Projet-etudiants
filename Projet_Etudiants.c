@@ -185,6 +185,7 @@ void Suprimer_Etudiant(Liste* li, int pos){
         exit(EXIT_FAILURE);
     }
     EtudiantRepere* Courant=li->tete,*temp;
+    char nom_fichier[100];
     if (pos == 1) {
         li->tete = Courant->suivant; // La tête de liste avance au nœud suivant
         free(Courant); // Libération de la mémoire de l'ancien premier nœud
@@ -200,9 +201,16 @@ void Suprimer_Etudiant(Liste* li, int pos){
     }
     temp=Courant->suivant;
     Courant->suivant=temp->suivant;
+    sprintf(nom_fichier, "%s_rapport.txt", temp->nom);
+    if(remove(nom_fichier) == 0){
+        printf("Le fichier '%s' a ete supprime avec succes.\n", nom_fichier);
+    } else {
+        perror("Erreur lors de la suppression du fichier");
+    }
     free(temp);
     printf("L'etudiant de position %d est supprime avec succes.\n", pos);
     li->nef--;
+    Generer_Rapport_Academique(li);
 }
 int* Recherche_et_Affichage_des_Informations_nom(Liste* li ,char*nom,int *nbt) {
     EtudiantRepere *courant=li->tete;
@@ -477,7 +485,7 @@ void Generer_Rapport_Academique(Liste* li){
     for (int i=0;i<NBR_NOTES;i++){
         fprintf(fichier,"%s :%.2f/20\n",P.note[i].libelle,MoyMod[i]);
     }
-    fprintf(fichier,"La moyenne generale du filière est: %.2f\n", calculer_Moyenne_Generale_Rapport(li));
+    fprintf(fichier,"La moyenne generale du filière est: %.2f/20\n", calculer_Moyenne_Generale_Rapport(li));
     fclose(fichier);
     free(MoyMod);
 }
