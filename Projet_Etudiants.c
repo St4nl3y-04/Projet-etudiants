@@ -180,40 +180,12 @@ void enregistrer_liste_etudiant(Liste* li) { // fonction pour enregistrer les et
     }
     fclose(fichier);
 }
-void Suprimer_Etudiant(Liste* li, int pos){
-    if (li == NULL || li->tete == NULL){
-        exit(EXIT_FAILURE);
-    }
-    EtudiantRepere* Courant=li->tete,*temp;
-    char nom_fichier[100];
-    if (pos == 1) {
-        li->tete = Courant->suivant; // La tête de liste avance au nœud suivant
-        free(Courant); // Libération de la mémoire de l'ancien premier nœud
-        printf("L'étudiant de position %d est supprimé avec succès.\n", pos);
-        return;
-    }
-    for(int i=1; Courant!=NULL && i<pos-1;i++){
-        Courant=Courant->suivant;
-    }
-    if (Courant == NULL || Courant->suivant == NULL) {
-        printf("Position invalide. Aucun étudiant n'a été supprimé.\n");
-        return;
-    }
-    temp=Courant->suivant;
-    Courant->suivant=temp->suivant;
-    sprintf(nom_fichier, "%s_rapport.txt", temp->nom);
-    if(remove(nom_fichier) == 0){
-        printf("Le fichier '%s' a ete supprime avec succes.\n", nom_fichier);
-    } else {
-        perror("Erreur lors de la suppression du fichier");
-    }
-    free(temp);
-    printf("L'etudiant de position %d est supprime avec succes.\n", pos);
-    li->nef--;
-    Generer_Rapport_Academique(li);
-}
-int* Recherche_et_Affichage_des_Informations_nom(Liste* li ,char*nom,int *nbt) {
+int* Recherche_et_Affichage_des_Informations_nom(Liste* li,int *nbt) {
     EtudiantRepere *courant=li->tete;
+    char nom[50];
+    printf("veuiller saisir le nom de l'etudiant:  ");
+    fflush(stdin);
+    scanf("%[^\n]", nom);
     int found=0;
     int i=1;
     (*nbt)=0;
@@ -240,8 +212,11 @@ int* Recherche_et_Affichage_des_Informations_nom(Liste* li ,char*nom,int *nbt) {
         }
 return pos;
 }
-int Recherche_et_Affichage_des_Informations_identifiant(Liste* li ,int ID) {
+int Recherche_et_Affichage_des_Informations_identifiant(Liste* li) {
+    int ID;
     EtudiantRepere *courant=li->tete;
+    printf("saisire l'identifiant de l'etudiant que vous vouler chercher: ");
+    scanf("%d",&ID);
     int found=0;
     int i=1;
     int pos=0;
@@ -300,11 +275,8 @@ void Rech_Pos_Occ(int *pos, const int nbt){
         }
     }
 }
-EtudiantRepere* modifier_infor(Liste* li) {
-    int ID,l;
-    printf("Veuillez saisir l'identifiant de l'étudiant que vous souhaitez modifier: ");
-    scanf("%d", &ID);
-    int positions = Recherche_et_Affichage_des_Informations_identifiant(li, ID);
+void* modifier_infor(Liste* li,int positions) {
+    int l;
     
     if (positions ==0 ) {
         printf("Étudiant non trouvé.\n");
@@ -367,8 +339,11 @@ EtudiantRepere* modifier_infor(Liste* li) {
     return courant;
      }while (l!=19);
 }
-int* Recherche_et_Affichage_des_Informations_age(Liste* li ,int age,int* nbt) {
+int* Recherche_et_Affichage_des_Informations_age(Liste* li,int* nbt) {
     EtudiantRepere *courant=li->tete;
+    printf("saisir l age de l'etudiant que vous souhaitez trouver: ");
+    int age;
+    scanf("%d",&age);
     int found=0;
     int i=1;
     (*nbt)=0;
@@ -457,6 +432,42 @@ void afficher_menu_recherche(){
     printf("5. Quitter le programme\n");
     printf("Choisissez une option: ");
 }
+int Recherche_tous (Liste* liste){
+            int R;
+            int nbt=0;
+            int position=0;
+            do
+            {
+                afficher_menu_recherche();
+                scanf("%d",&R);
+                nbt=0;
+                position=0;
+                switch (R)
+                {
+                    int* L=NULL;
+                    case 1:
+                    L=Recherche_et_Affichage_des_Informations_nom(liste,&nbt);
+                    position=L[0];
+                    break;
+                    case 2:
+                    L=Recherche_et_Affichage_des_Informations_age(liste,&nbt);
+                    position=L[0];
+                    break;
+                    case 3:
+                    position=Recherche_et_Affichage_des_Informations_identifiant(liste);
+                    if(position>1){
+                        nbt=1;
+                    }
+                    break;
+                    case 5:
+                    break;
+                    default:
+                    printf("Option invalide\n");
+                    break;
+                }
+            } while (R!=4 && nbt != 1 );
+            return position;
+}
 float* calculer_Moyenne_Module_Rapport(Liste* li){
     float *Moy=(float*)malloc(NBR_NOTES*(sizeof(float)));
     if (Moy == NULL) {
@@ -498,8 +509,40 @@ void Generer_Rapport_Academique(Liste* li){
     fclose(fichier);
     free(MoyMod);
 }
+void Suprimer_Etudiant(Liste* li, int pos){
+    if (li == NULL || li->tete == NULL){
+        exit(EXIT_FAILURE);
+    }
+    EtudiantRepere* Courant=li->tete,*temp;
+    char nom_fichier[100];
+    if (pos == 1) {
+        li->tete = Courant->suivant; // La tête de liste avance au nœud suivant
+        free(Courant); // Libération de la mémoire de l'ancien premier nœud
+        printf("L'étudiant de position %d est supprimé avec succès.\n", pos);
+        return;
+    }
+    for(int i=1; Courant!=NULL && i<pos-1;i++){
+        Courant=Courant->suivant;
+    }
+    if (Courant == NULL || Courant->suivant == NULL) {
+        printf("Position invalide. Aucun étudiant n'a été supprimé.\n");
+        return;
+    }
+    temp=Courant->suivant;
+    Courant->suivant=temp->suivant;
+    sprintf(nom_fichier, "%s_rapport.txt", temp->nom);
+    if(remove(nom_fichier) == 0){
+        printf("Le fichier '%s' a ete supprime avec succes.\n", nom_fichier);
+    } else {
+        perror("Erreur lors de la suppression du fichier");
+    }
+    free(temp);
+    printf("L'etudiant de position %d est supprime avec succes.\n", pos);
+    li->nef--;
+    Generer_Rapport_Academique(li);
+}
 int main (){
-    int C,k, iden, agee;
+    int C,k;
     char nom[50];   
     Liste* liste = lire_fichier_txt();
     do{
@@ -521,7 +564,7 @@ int main (){
             fflush(stdin); //vider le tampon
             fgets(nom,50, stdin);
             nom[strcspn(nom,"\n")] = '\0';
-            pos=Recherche_et_Affichage_des_Informations_nom(liste,nom,&nbt);
+            pos=Recherche_et_Affichage_des_Informations_nom(liste,&nbt);
             Rech_Pos_Occ(pos,nbt);
             for(int i=0;i<nbt;i++){
                 Suprimer_Etudiant(liste,pos[i]);
@@ -537,24 +580,17 @@ int main (){
                     int nbt=0;
                     int* pos=NULL;
                     case 1:
-                    fflush(stdin);
-                    printf("veuiller saisir le nom de l etu que souhaiter chercher ");
-                    fgets(nom,50, stdin);
-                    nom[strcspn(nom,"\n")] = '\0';
-                    pos=Recherche_et_Affichage_des_Informations_nom(liste,nom,&nbt);
+                    pos=Recherche_et_Affichage_des_Informations_nom(liste,&nbt);
                     Rech_Pos_Occ(pos,nbt);
                     break;
                     case 2:
-                    printf("saisire l age de l'etu que vous vouler chercher sur lui");
-                    scanf("%d",&agee);
-                    pos=Recherche_et_Affichage_des_Informations_age(liste,agee,&nbt);
+                    pos=Recherche_et_Affichage_des_Informations_age(liste,&nbt);
                     Rech_Pos_Occ(pos,nbt);
                     break;
                     case 3:
-                    printf("saisire l'identifiant de l'etudiant que vous vouler chercher: ");
-                    scanf("%d",&iden);
+                    printf("tst");
                     int position;
-                    position = Recherche_et_Affichage_des_Informations_identifiant(liste,iden);
+                    position = Recherche_et_Affichage_des_Informations_identifiant(liste);
                     printf("La position de cet etudiant est: %d",position);
                     break;
                     case 5:
@@ -568,7 +604,12 @@ int main (){
             }while (k!=4 && k!=5);
             break;
             case 5:
-            modifier_infor(liste);
+            printf("modification:\n");
+            int position=0;
+            position=Recherche_tous(liste);
+            if(position>0){
+                modifier_infor(liste,position);
+            }
             break;
             case 6: 
             Generer_Rapport_Academique(liste);

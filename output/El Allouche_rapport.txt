@@ -6,7 +6,7 @@ note Theorie des Graphes et Recherche Operationnelle: 19.00
 note Architecture des Ordinateurs & Assembleur: 17.00 
 note Base des Donnees Relationnelles: 18.00 
 note Reseaux Informatiques: 16.00 
-note Structure de Donnees en C: 14.00 
+note Structure de Donnees en C: 19.00 
 note Langues etrangeres 1: 15.00 
 note Digital Skills: 17.00 
 note Systemes d'Exploitation et Linux: 18.00 
@@ -16,4 +16,4 @@ note Developpement Web: 19.00
 note Programmation Oriente Objet Java: 17.00 
 note Langues etrangeres 2: 16.00 
 note Culture & Arts & Sport Skills: 17.00 
-moyenne generale: 17.00 
+moyenne generale: 17.36 

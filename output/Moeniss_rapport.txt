@@ -15,5 +15,5 @@ note Theories des Langages et Compilation: 15.00
 note Developpement Web: 16.00 
 note Programmation Oriente Objet Java: 17.00 
 note Langues etrangeres 2: 18.00 
-note Culture & Arts & Sport Skills: 15.00 
-moyenne generale: 17.00 
+note Culture & Arts & Sport Skills: 19.50 
+moyenne generale: 17.32 
