@@ -1,0 +1,19 @@
+identifiant: 107 
+nom: Rohand 
+prenom: Douae 
+age: 19 
+note Theorie des Graphes et Recherche Operationnelle: 18.00 
+note Architecture des Ordinateurs & Assembleur: 17.00 
+note Base des Donnees Relationnelles: 17.00 
+note Reseaux Informatiques: 18.00 
+note Structure de Donnees en C: 18.00 
+note Langues etrangeres 1: 19.00 
+note Digital Skills: 17.00 
+note Systemes d'Exploitation et Linux: 20.00 
+note Modelisation Oriente Objet: 17.00 
+note Theories des Langages et Compilation: 15.00 
+note Developpement Web: 1.00 
+note Programmation Oriente Objet Java: 20.00 
+note Langues etrangeres 2: 20.00 
+note Culture & Arts & Sport Skills: 17.00 
+moyenne generale: 16.71 

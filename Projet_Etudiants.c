@@ -98,13 +98,10 @@ EtudiantRepere * Creer_Etudiant(){
     EtudiantRepere *P=(EtudiantRepere*)malloc(sizeof(EtudiantRepere));
     printf("\nEntrez l'identifiant de l'etudiant :");
     scanf(" %d", &P->Id);
-    fflush(stdin); //vider le tampon
     printf("Entrez le nom de l'etudiant :");
-    fgets(P->nom,50, stdin); 
-    P->nom[strcspn(P->nom,"\n")] = '\0';
+    scanf(" %[^\n]", P->nom);
     printf("Entrez le prenom de l'etudiant :");
-    fgets(P->prenom,50, stdin); // Lire le prenom, même s'il contient des espaces
-    P->prenom[strcspn(P->prenom, "\n")] = '\0'; // Retirer le caractère '\n' ajouté par fgets
+    scanf(" %[^\n]", P->prenom);
     printf("Entrez la date de naissance (jour mois annee) :");
     scanf("%d %d %d", &P->date.jour, &P->date.mois, &P->date.annee);
     P->age=calculerAge(P);
@@ -146,9 +143,6 @@ void afficher_liste_Etudiant (Liste* li){
     printf("\nLa liste des etudiants avec leurs details\n:");
     while (P!=NULL){
         printf("Identifiant: %d\nNom: %s\nPrenom: %s\nAge: %d ans , ne le %02d/%02d/%04d \n",P->Id, P->nom, P->prenom, P->age, P->date.jour, P->date.mois,P->date.annee);
-        for (int i = 0; i < NBR_NOTES; i++) { 
-            printf("Note en %s : %.2f/20\n", P->note[i].libelle, P->note[i].valeur);
-        }
         P->Moy=calculer_Moyenne(P);
         printf("Moyenne generale : %.2f/20\n----------------------------\n", P->Moy);  
         P=P->suivant;
@@ -259,36 +253,102 @@ int Recherche_et_Affichage_des_Informations_identifiant(Liste* li ,int ID) {
             }
     return pos;
 }
-EtudiantRepere* modifier_Etudiant_ID(Liste* li) {
-    int ID;
+void bultane_etu(EtudiantRepere*p){
+    char nom_fichier[100];
+    sprintf(nom_fichier, "%s_rapport.txt", p->nom);
+    FILE*file=fopen(nom_fichier,"w");
+    if (file == NULL) {
+        printf("Erreur d'ouverture du fichier.\n");
+        return;
+    }
+    fprintf(file,"identifiant: %d \n",p->Id);
+    fprintf(file,"nom: %s \n",p->nom);
+    fprintf(file,"prenom: %s \n",p->prenom);
+    fprintf(file,"age: %d \n",p->age);
+    for(int i=0;i<NBR_NOTES;i++){
+    fprintf(file,"note %s: %.2f \n",p->note[i].libelle,p->note[i].valeur);}
+    fprintf(file,"moyenne generale: %.2f \n",p->Moy);
+    fclose(file);
+}
+void afficher_menu_modifier(EtudiantRepere*p) {
+    printf("\nMenu de modification des informations de l'étudiant :\n");
+    printf("1. Changer l'identifiant\n");
+    printf("2. Changer le nom\n");
+    printf("3. Changer le prénom\n");
+    printf("4. Changer l'âge\n");
+
+    // Affichage pour les 14 notes
+    for (int i = 0; i < NBR_NOTES; i++) {
+        printf("%d. Modifier la note %s\n", 5+i, p->note[i].libelle);
+    }
+    printf("19. Retour au menu principal\n");
+    printf("Veuillez choisir une option : ");
+}
+void Rech_Pos_Occ(int *pos, const int nbt){
+    if(nbt != 0){
+        printf("Nombre d'etudiants trouvée: %d", nbt);
+        for(int i=0;i<nbt;i++){
+            printf("\nLa postion de l'etudinat n '%d' trouvee est: %d",i+1,pos[i]);
+        }
+    }
+}
+EtudiantRepere* modifier_infor(Liste* li) {
+    int ID,l;
     printf("Veuillez saisir l'identifiant de l'étudiant que vous souhaitez modifier: ");
     scanf("%d", &ID);
-    int position = Recherche_et_Affichage_des_Informations_identifiant(li, ID);
-    if (position == 0) {
-        printf("Etudiant non trouve.\n");
+    int positions = Recherche_et_Affichage_des_Informations_identifiant(li, ID);
+    
+    if (positions ==0 ) {
+        printf("Étudiant non trouvé.\n");
         return NULL;
     }
+
     EtudiantRepere* courant = li->tete;
-    for (int i = 1; i < position; i++) { 
+    for (int i = 1; i < positions; i++) { 
         courant = courant->suivant;
     }
-    printf("Modification des informations de l'étudiant:\n");
-    printf("Entrez l'identifiant de l'etudiant: ");
-    scanf("%d", &courant->Id);
-    fflush(stdin); //vider le tampon
-    printf("Entrez le nom de l'etudiant :");
-    fgets(courant->nom,50, stdin); 
-    courant->nom[strcspn(courant->nom,"\n")] = '\0';
-    printf("Entrez le prenom de l'etudiant :");
-    fgets(courant->prenom,50, stdin); // Lire le prenom, même s'il contient des espaces
-    courant->prenom[strcspn(courant->prenom, "\n")] = '\0'; // Retirer le caractère '\n' ajouté par fgets
-    printf("Entrez la date de naissance (jour mois annee) :");
-    scanf("%d %d %d", &courant->date.jour, &courant->date.mois, &courant->date.annee);
+    do{
+        afficher_menu_modifier(courant);
+        scanf("%d",&l);
+        printf("Modification des informations de l'étudiant:\n");
+        switch (l){
+        case 1:
+        printf("Entrez le nouveau identifiant: ");
+        scanf("%d",&courant->Id);
+        break;
+        case 2:
+        printf("Entrez le nouveau nom: ");
+        scanf(" %[^\n]", courant->nom);
+        break;
+        case 3:
+        printf("Entrez le nouveau prénom: ");
+        scanf(" %[^\n]", courant->prenom);
+        break;
+        case 4:
+        printf("Entrez la nouvelle date de naissance (jour mois année): ");
+        scanf("%d %d %d", &courant->date.jour, &courant->date.mois, &courant->date.annee);
+        break;
+        case 19:
+                printf("Retour au menu principal.\n");
+                return courant;
+            default:
+                if (l >= 5 && l < 5 + NBR_NOTES) {
+                    int index = l - 5;
+                    printf("Entrez la nouvelle valeur pour la note %d (%s) : ", index + 1, courant->note[index].libelle);
+                    scanf("%f", &courant->note[index].valeur);
+                } else {
+                    printf("Option invalide.\n");
+                }
+                break;}
+    printf("Modification effectuée.\n");
     courant->age = calculerAge(courant);
+    courant->Moy = calculer_Moyenne(courant);
     printf("Les informations ont été modifiées avec succès.\n");
     creer_fichier_txt ();
     enregistrer_liste_etudiant(li);
+    bultane_etu(courant);
     return courant;
+     }while (l!=19);
 }
 int* Recherche_et_Affichage_des_Informations_age(Liste* li ,int age,int* nbt) {
 EtudiantRepere *courant=li->tete;
@@ -347,6 +407,7 @@ Liste* lire_fichier_txt () {
         sscanf(notesData, "%f/20\n", &P->Moy);
         Libelle_notes(P);
         P->suivant=NULL;
+        bultane_etu(P);
         if (li->tete == NULL) { // si la liste est vide
             li->tete=P;
             li->queue=P;
@@ -378,14 +439,6 @@ void afficher_menu_recherche(){
     printf("4. Quitter le menu de recherche vers menu principale\n");
     printf("5. Quitter le programme\n");
     printf("Choisissez une option: ");
-}
-void Rech_Pos_Occ(int *pos, const int nbt){
-    if(nbt != 0){
-        printf("Nombre d'etudiants trouvée: %d", nbt);
-        for(int i=0;i<nbt;i++){
-            printf("\nLa postion de l'etudinat n '%d' trouvee est: %d",i+1,pos[i]);
-        }
-    }
 }
 float* calculer_Moyenne_Module_Rapport(Liste* li){
     float *Moy=(float*)malloc(NBR_NOTES*(sizeof(float)));
@@ -498,7 +551,7 @@ int main (){
             }while (k!=4 && k!=5);
             break;
             case 5:
-            modifier_Etudiant_ID(liste);
+            modifier_infor(liste);
             break;
             case 6: 
             Generer_Rapport_Academique(liste);
@@ -512,3 +565,4 @@ int main (){
         }
     }while (C != 7);
     return 0;
+} 
