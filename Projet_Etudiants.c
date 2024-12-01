@@ -107,7 +107,8 @@ void bultane_etu(EtudiantRepere*p){
     fprintf(file,"prenom:      %s \n",p->prenom);
     fprintf(file,"age:         %d \n",p->age);
     for(int i=0;i<NBR_NOTES;i++){
-    fprintf(file,"%s: %.2f \n",p->note[i].libelle,p->note[i].valeur);}
+        fprintf(file,"%s: %.2f \n",p->note[i].libelle,p->note[i].valeur);
+    }
     fprintf(file,"moyenne generale                               : %.2f \n",p->Moy);
     fclose(file);
 }
@@ -122,8 +123,8 @@ EtudiantRepere * Creer_Etudiant(){
     printf("Entrez la date de naissance (jour mois annee) :");
     scanf("%d %d %d", &P->date.jour, &P->date.mois, &P->date.annee);
     P->age=calculerAge(P);
+    Libelle_notes(P);
     for (int i = 0; i < NBR_NOTES; i++) { 
-        Libelle_notes(P);
         do{
             printf("Entrez la note pour %s : ", P->note[i].libelle); 
             scanf("%f", &P->note[i].valeur); 
@@ -169,7 +170,7 @@ void afficher_liste_Etudiant (Liste* li){
     while (P!=NULL){
         printf("Identifiant: %d\nNom: %s\nPrenom: %s\nAge: %d ans , ne le %02d/%02d/%04d \n",P->Id, P->nom, P->prenom, P->age, P->date.jour, P->date.mois,P->date.annee);
         P->Moy=calculer_Moyenne(P);
-        printf("Moyenne generale : %.2f/20\n----------------------------\n", P->Moy);  
+        printf("Moyenne generale : %.2f/20\n--------------------------------------------------\n", P->Moy);  
         P=P->suivant;
     }
 }
@@ -388,7 +389,7 @@ Liste* lire_fichier_txt () {
     Liste* li=Creer_Liste_Etudiants();
     char buffer[512];
     rewind(F);
-    fgets(buffer, sizeof(buffer), F); // Première ligne (Nom, Prix, Quantité)
+    fgets(buffer, sizeof(buffer), F); // Première ligne
     fgets(buffer, sizeof(buffer), F); // Ligne de séparation
     while (fgets(buffer, sizeof(buffer), F) != NULL){
         EtudiantRepere *P=(EtudiantRepere*)malloc(sizeof(EtudiantRepere));
@@ -440,45 +441,47 @@ void afficher_menu_recherche(){
     printf("Choisissez une option: ");
 }
 int Recherche_tous (Liste* liste){
-            int R;
-            int nbt=0;
-            int position=0;
-            int* L=(int*)malloc(sizeof(int));
-            do
-            {
-                afficher_menu_recherche();
-                scanf("%d",&R);
-                nbt=0;
-                position=0;
-                switch (R)
-                {
-                    case 1:
-                    L=Recherche_et_Affichage_des_Informations_nom(liste,&nbt);
-                    if(L==NULL){
-                        return 0;
-                    }
-                    position=L[0];
-                    break;
-                    case 2:
-                    L=Recherche_et_Affichage_des_Informations_age(liste,&nbt);
-                    if(L==NULL){
-                        return 0;
-                    }
-                    position=L[0];
-                    break;
-                    case 3:
-                    position=Recherche_et_Affichage_des_Informations_identifiant(liste);
-                    if(position>1){
-                        nbt=1;
-                    }
-                    break;
-                    case 5:
-                    break;
-                    default:
-                    printf("Option invalide\n");
-                    break;
-                }
-            } while (R!=4 && nbt != 1);
+    int R;
+    int nbt=0;
+    int position=0;
+    int* L=(int*)malloc(sizeof(int));
+    do
+    {
+        afficher_menu_recherche();
+        scanf("%d",&R);
+        nbt=0;
+        position=0;
+        switch (R)
+        {
+            case 1:
+            L=Recherche_et_Affichage_des_Informations_nom(liste,&nbt);
+            if(L==NULL){
+                return 0;
+            }
+            position=L[0];
+            break;
+            case 2:
+            L=Recherche_et_Affichage_des_Informations_age(liste,&nbt);
+            if(L==NULL){
+                return 0;
+            }
+            position=L[0];
+            break;
+            case 3:
+            position=Recherche_et_Affichage_des_Informations_identifiant(liste);
+            if(position>1){
+                nbt=1;
+            }else if(position==0){
+                return 0;
+            }
+            break;
+            case 5:
+            break;
+            default:
+            printf("Option invalide\n");
+            break;
+            }
+        } while (nbt!=1);
             return position;
 }
 float* calculer_Moyenne_Module_Rapport(Liste* li){

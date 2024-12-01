@@ -1,0 +1,19 @@
+identifiant: 101 
+nom:         Mohito 
+prenom:      Raihana 
+age:         20 
+Theorie des Graphes et Recherche Operationnelle: 20.00 
+Architecture des Ordinateurs & Assembleur      : 18.00 
+Base des Donnees Relationnelles                : 17.00 
+Reseaux Informatiques                          : 19.00 
+Structure de Donnees en C                      : 17.00 
+Langues etrangeres 1                           : 18.00 
+Digital Skills                                 : 15.00 
+Systemes d'Exploitation et Linux               : 14.00 
+Modelisation Oriente Objet                     : 16.00 
+Theories des Langages et Compilation           : 14.00 
+Developpement Web                              : 17.00 
+Programmation Oriente Objet Java               : 18.00 
+Langues etrangeres 2                           : 19.00 
+Culture & Arts & Sport Skills                  : 15.00 
+moyenne generale                               : 16.93 
