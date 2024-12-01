@@ -326,7 +326,16 @@ EtudiantRepere* modifier_infor(Liste* li) {
         break;
         case 2:
         printf("Entrez le nouveau nom: ");
+        char nomfich[100];
+        char nvnom[100];
+        sprintf(nomfich,"%s_rapport.txt",courant->nom);
         scanf(" %[^\n]", courant->nom);
+        sprintf(nvnom,"%s_rapport.txt",courant->nom);
+        if (rename(nomfich, nvnom) == 0) {
+            printf("Le fichier '%s' a ete renomme en '%s' avec succes.\n", nomfich, nvnom);
+        } else {
+            perror("Erreur lors du renommage du fichier");
+        }
         break;
         case 3:
         printf("Entrez le nouveau prénom: ");
@@ -359,17 +368,17 @@ EtudiantRepere* modifier_infor(Liste* li) {
      }while (l!=19);
 }
 int* Recherche_et_Affichage_des_Informations_age(Liste* li ,int age,int* nbt) {
-EtudiantRepere *courant=li->tete;
-int found=0;
-int i=1;
-(*nbt)=0;
-int* pos=NULL;
-while(courant!=NULL){
-    if(courant->age==age){
-        printf("les informations de l etu qui a l age %d sont \n",age);
-        afficherEtudiant(courant);
-        found=1;
-        pos=realloc(pos,((*nbt)+1)*sizeof(int));
+    EtudiantRepere *courant=li->tete;
+    int found=0;
+    int i=1;
+    (*nbt)=0;
+    int* pos=NULL;
+    while(courant!=NULL){
+        if(courant->age==age){
+            printf("les informations de l etu qui a l age %d sont \n",age);
+            afficherEtudiant(courant);
+            found=1;
+            pos=realloc(pos,((*nbt)+1)*sizeof(int));
             if (pos == NULL) {
                 perror("Erreur de realloc");
                 free(pos); // Libérer la mémoire précédemment allouée

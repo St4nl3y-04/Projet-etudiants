@@ -2,7 +2,7 @@ identifiant: 106
 nom: Raissouni 
 prenom: Aya 
 age: 19 
-note Theorie des Graphes et Recherche Operationnelle: 10.00 
+note Theorie des Graphes et Recherche Operationnelle: 19.00 
 note Architecture des Ordinateurs & Assembleur: 17.00 
 note Base des Donnees Relationnelles: 18.00 
 note Reseaux Informatiques: 19.00 
@@ -16,4 +16,4 @@ note Developpement Web: 17.00
 note Programmation Oriente Objet Java: 15.00 
 note Langues etrangeres 2: 20.00 
 note Culture & Arts & Sport Skills: 17.00 
-moyenne generale: 16.43 
+moyenne generale: 17.07 
