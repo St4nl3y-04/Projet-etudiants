@@ -117,6 +117,14 @@ EtudiantRepere * Creer_Etudiant(){
     }
     P->Moy=calculer_Moyenne(P);
     P->suivant=NULL;
+    FILE* fichier = fopen("pEtudiants.txt", "a");
+    fprintf(fichier, "%d\t| %s\t| %s\t| %i\t| %02d/%02d/%02d\t|", P->Id, P->nom, P->prenom, P->age, P->date.jour, P->date.mois,P->date.annee);
+    for (int i = 0; i < NBR_NOTES; i++) {
+        fprintf(fichier, "%.2f/20\t| ", P->note[i].valeur);
+    }
+    fprintf(fichier,"%.2f/20\n",P->Moy);
+    fclose(fichier);
+    bultane_etu(P);
     return P;
 }
 void afficherEtudiant(EtudiantRepere* E) {
