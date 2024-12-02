@@ -559,8 +559,6 @@ int main (){
         switch(C){
             case 1:
             ajouter_Etudiant_liste(liste);
-            creer_fichier_txt();
-            enregistrer_liste_etudiant(liste);
             break;
             case 2:
             afficher_liste_Etudiant(liste);
