@@ -1,0 +1,19 @@
+identifiant: 109 
+nom: Essamit 
+prenom: Taha 
+age: 21 
+note Theorie des Graphes et Recherche Operationnelle: 20.00 
+note Architecture des Ordinateurs & Assembleur: 17.00 
+note Base des Donnees Relationnelles: 19.00 
+note Reseaux Informatiques: 18.00 
+note Structure de Donnees en C: 15.00 
+note Langues etrangeres 1: 17.00 
+note Digital Skills: 16.40 
+note Systemes d'Exploitation et Linux: 17.90 
+note Modelisation Oriente Objet: 18.00 
+note Theories des Langages et Compilation: 15.20 
+note Developpement Web: 17.90 
+note Programmation Oriente Objet Java: 19.00 
+note Langues etrangeres 2: 18.40 
+note Culture & Arts & Sport Skills: 16.25 
+moyenne generale: 17.50 

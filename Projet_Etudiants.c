@@ -94,6 +94,23 @@ void Libelle_notes(EtudiantRepere *P) {
         }
     }
 }
+void bultane_etu(EtudiantRepere*p){
+    char nom_fichier[100];
+    sprintf(nom_fichier, "%s_rapport.txt", p->nom);
+    FILE*file=fopen(nom_fichier,"w");
+    if (file == NULL) {
+        printf("Erreur d'ouverture du fichier.\n");
+        return;
+    }
+    fprintf(file,"identifiant: %d \n",p->Id);
+    fprintf(file,"nom: %s \n",p->nom);
+    fprintf(file,"prenom: %s \n",p->prenom);
+    fprintf(file,"age: %d \n",p->age);
+    for(int i=0;i<NBR_NOTES;i++){
+    fprintf(file,"note %s: %.2f \n",p->note[i].libelle,p->note[i].valeur);}
+    fprintf(file,"moyenne generale: %.2f \n",p->Moy);
+    fclose(file);
+}
 EtudiantRepere * Creer_Etudiant(){
     EtudiantRepere *P=(EtudiantRepere*)malloc(sizeof(EtudiantRepere));
     printf("\nEntrez l'identifiant de l'etudiant :");
@@ -243,23 +260,6 @@ int Recherche_et_Affichage_des_Informations_identifiant(Liste* li) {
             return 0;
             }
     return pos;
-}
-void bultane_etu(EtudiantRepere*p){
-    char nom_fichier[100];
-    sprintf(nom_fichier, "%s_rapport.txt", p->nom);
-    FILE*file=fopen(nom_fichier,"w");
-    if (file == NULL) {
-        printf("Erreur d'ouverture du fichier.\n");
-        return;
-    }
-    fprintf(file,"identifiant: %d \n",p->Id);
-    fprintf(file,"nom: %s \n",p->nom);
-    fprintf(file,"prenom: %s \n",p->prenom);
-    fprintf(file,"age: %d \n",p->age);
-    for(int i=0;i<NBR_NOTES;i++){
-    fprintf(file,"note %s: %.2f \n",p->note[i].libelle,p->note[i].valeur);}
-    fprintf(file,"moyenne generale: %.2f \n",p->Moy);
-    fclose(file);
 }
 void afficher_menu_modifier(EtudiantRepere*p) {
     printf("\nMenu de modification des informations de l'étudiant :\n");
@@ -437,13 +437,13 @@ void afficher_menu_recherche(){
     printf("2. chercher par age\n");
     printf("3. chercher par identifiant\n");
     printf("4. Quitter le menu de recherche vers menu principale\n");
-    printf("5. Quitter le programme\n");
     printf("Choisissez une option: ");
 }
 int Recherche_tous (Liste* liste){
             int R;
             int nbt=0;
             int position=0;
+            int* L=(int*)malloc(sizeof(int));
             do
             {
                 afficher_menu_recherche();
@@ -452,13 +452,18 @@ int Recherche_tous (Liste* liste){
                 position=0;
                 switch (R)
                 {
-                    int* L=NULL;
                     case 1:
                     L=Recherche_et_Affichage_des_Informations_nom(liste,&nbt);
+                    if(L==NULL){
+                        return 0;
+                    }
                     position=L[0];
                     break;
                     case 2:
                     L=Recherche_et_Affichage_des_Informations_age(liste,&nbt);
+                    if(L==NULL){
+                        return 0;
+                    }
                     position=L[0];
                     break;
                     case 3:
@@ -473,7 +478,7 @@ int Recherche_tous (Liste* liste){
                     printf("Option invalide\n");
                     break;
                 }
-            } while (R!=4 && nbt != 1 );
+            } while (R!=4 && nbt != 1);
             return position;
 }
 float* calculer_Moyenne_Module_Rapport(Liste* li){
@@ -525,8 +530,14 @@ void Suprimer_Etudiant(Liste* li, int pos){
     char nom_fichier[100];
     if (pos == 1) {
         li->tete = Courant->suivant; // La tête de liste avance au nœud suivant
-        free(Courant); // Libération de la mémoire de l'ancien premier nœud
         printf("L'étudiant de position %d est supprimé avec succès.\n", pos);
+        sprintf(nom_fichier, "%s_rapport.txt", Courant->nom);
+        if(remove(nom_fichier) == 0){
+        printf("Le fichier '%s' a ete supprime avec succes.\n", nom_fichier);
+        } else {
+        perror("Erreur lors de la suppression du fichier");
+        }
+        free(Courant); // Libération de la mémoire de l'ancien premier nœud
         return;
     }
     for(int i=1; Courant!=NULL && i<pos-1;i++){
@@ -551,7 +562,6 @@ void Suprimer_Etudiant(Liste* li, int pos){
 }
 int main (){
     int C,k;
-    char nom[50];   
     Liste* liste = lire_fichier_txt();
     do{
         afficher_menu();
@@ -565,15 +575,10 @@ int main (){
             break;
             case 3:
             printf("veuiller saisir le nom de l etu que souhaiter suprimer: ");
-            int nbt=0;
-            int* pos=NULL;
-            fflush(stdin); //vider le tampon
-            fgets(nom,50, stdin);
-            nom[strcspn(nom,"\n")] = '\0';
-            pos=Recherche_et_Affichage_des_Informations_nom(liste,&nbt);
-            Rech_Pos_Occ(pos,nbt);
-            for(int i=0;i<nbt;i++){
-                Suprimer_Etudiant(liste,pos[i]);
+            int Z=0;
+            Z=Recherche_tous(liste);
+            if(Z>0){
+                Suprimer_Etudiant(liste,Z);
             }
             creer_fichier_txt();
             enregistrer_liste_etudiant(liste);
@@ -598,10 +603,6 @@ int main (){
                     int position;
                     position = Recherche_et_Affichage_des_Informations_identifiant(liste);
                     printf("La position de cet etudiant est: %d",position);
-                    break;
-                    case 5:
-                    C=7;
-                    printf("Au revoir");
                     break;
                     default:
                     printf("Option invalide, veuillez reessayer.\n");

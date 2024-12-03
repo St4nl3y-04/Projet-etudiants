@@ -1,16 +1,16 @@
 Le rapport académique de la filière GI1: 
-Theorie des Graphes et Recherche Operationnelle :16.33/20
-Architecture des Ordinateurs & Assembleur :15.22/20
-Base des Donnees Relationnelles :15.89/20
-Reseaux Informatiques :16.33/20
-Structure de Donnees en C :15.78/20
-Langues etrangeres 1 :15.22/20
-Digital Skills :14.89/20
-Systemes d'Exploitation et Linux :15.22/20
-Modelisation Oriente Objet :15.11/20
-Theories des Langages et Compilation :14.78/20
-Developpement Web :12.89/20
-Programmation Oriente Objet Java :15.00/20
-Langues etrangeres 2 :16.22/20
-Culture & Arts & Sport Skills :15.28/20
-La moyenne generale du filière est: 15.30/20
+Theorie des Graphes et Recherche Operationnelle :18.50/20
+Architecture des Ordinateurs & Assembleur :17.10/20
+Base des Donnees Relationnelles :18.10/20
+Reseaux Informatiques :18.50/20
+Structure de Donnees en C :17.20/20
+Langues etrangeres 1 :16.80/20
+Digital Skills :16.24/20
+Systemes d'Exploitation et Linux :17.39/20
+Modelisation Oriente Objet :17.20/20
+Theories des Langages et Compilation :16.72/20
+Developpement Web :15.39/20
+Programmation Oriente Objet Java :17.10/20
+Langues etrangeres 2 :18.24/20
+Culture & Arts & Sport Skills :17.27/20
+La moyenne generale du filière est: 17.27/20
