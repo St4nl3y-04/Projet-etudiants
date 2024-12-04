@@ -66,49 +66,49 @@ void Libelle_notes(EtudiantRepere *P) {
         if (i == 0) {
             strcpy(P->note[i].libelle, "Theorie des Graphes et Recherche Operationnelle");
         } else if (i == 1) {
-            strcpy(P->note[i].libelle, "Architecture des Ordinateurs & Assembleur");
+            strcpy(P->note[i].libelle, "Architecture des Ordinateurs & Assembleur      ");
         } else if (i == 2) {
-            strcpy(P->note[i].libelle, "Base des Donnees Relationnelles");
+            strcpy(P->note[i].libelle, "Base des Donnees Relationnelles                ");
         } else if (i == 3) {
-            strcpy(P->note[i].libelle, "Reseaux Informatiques");
+            strcpy(P->note[i].libelle, "Reseaux Informatiques                          ");
         } else if (i == 4) {
-            strcpy(P->note[i].libelle, "Structure de Donnees en C");
+            strcpy(P->note[i].libelle, "Structure de Donnees en C                      ");
         } else if (i == 5) {
-            strcpy(P->note[i].libelle, "Langues etrangeres 1");
+            strcpy(P->note[i].libelle, "Langues etrangeres 1                           ");
         } else if (i == 6) {
-            strcpy(P->note[i].libelle, "Digital Skills");
+            strcpy(P->note[i].libelle, "Digital Skills                                 ");
         } else if (i == 7) {
-            strcpy(P->note[i].libelle, "Systemes d'Exploitation et Linux");
+            strcpy(P->note[i].libelle, "Systemes d'Exploitation et Linux               ");
         } else if (i == 8) {
-            strcpy(P->note[i].libelle, "Modelisation Oriente Objet");
+            strcpy(P->note[i].libelle, "Modelisation Oriente Objet                     ");
         } else if (i == 9) {
-            strcpy(P->note[i].libelle, "Theories des Langages et Compilation");
+            strcpy(P->note[i].libelle, "Theories des Langages et Compilation           ");
         } else if (i == 10) {
-            strcpy(P->note[i].libelle, "Developpement Web");
+            strcpy(P->note[i].libelle, "Developpement Web                              ");
         } else if (i == 11) {
-            strcpy(P->note[i].libelle, "Programmation Oriente Objet Java");
+            strcpy(P->note[i].libelle, "Programmation Oriente Objet Java               ");
         } else if (i == 12) {
-            strcpy(P->note[i].libelle, "Langues etrangeres 2");
+            strcpy(P->note[i].libelle, "Langues etrangeres 2                           ");
         } else if (i == 13) {
-            strcpy(P->note[i].libelle, "Culture & Arts & Sport Skills");
+            strcpy(P->note[i].libelle, "Culture & Arts & Sport Skills                  ");
         }
     }
 }
 void bultane_etu(EtudiantRepere*p){
     char nom_fichier[100];
-    sprintf(nom_fichier, "%s_rapport.txt", p->nom);
+    sprintf(nom_fichier, "%s.%d_rapport.txt", p->nom,p->Id);
     FILE*file=fopen(nom_fichier,"w");
     if (file == NULL) {
         printf("Erreur d'ouverture du fichier.\n");
         return;
     }
     fprintf(file,"identifiant: %d \n",p->Id);
-    fprintf(file,"nom: %s \n",p->nom);
-    fprintf(file,"prenom: %s \n",p->prenom);
-    fprintf(file,"age: %d \n",p->age);
+    fprintf(file,"nom:         %s \n",p->nom);
+    fprintf(file,"prenom:      %s \n",p->prenom);
+    fprintf(file,"age:         %d \n",p->age);
     for(int i=0;i<NBR_NOTES;i++){
-    fprintf(file,"note %s: %.2f \n",p->note[i].libelle,p->note[i].valeur);}
-    fprintf(file,"moyenne generale: %.2f \n",p->Moy);
+    fprintf(file,"%s: %.2f \n",p->note[i].libelle,p->note[i].valeur);}
+    fprintf(file,"moyenne generale                               : %.2f \n",p->Moy);
     fclose(file);
 }
 EtudiantRepere * Creer_Etudiant(){
@@ -310,7 +310,7 @@ void* modifier_infor(Liste* li,int positions) {
         char nvnom[100];
         sprintf(nomfich,"%s_rapport.txt",courant->nom);
         scanf(" %[^\n]", courant->nom);
-        sprintf(nvnom,"%s_rapport.txt",courant->nom);
+        sprintf(nvnom,"%s.%d_rapport.txt", courant->nom,courant->Id);
         if (rename(nomfich, nvnom) == 0) {
             printf("Le fichier '%s' a ete renomme en '%s' avec succes.\n", nomfich, nvnom);
         } else {
@@ -516,9 +516,9 @@ void Generer_Rapport_Academique(Liste* li){
     Libelle_notes(&P);
     float* MoyMod=calculer_Moyenne_Module_Rapport(li);
     for (int i=0;i<NBR_NOTES;i++){
-        fprintf(fichier,"%s :%.2f/20\n",P.note[i].libelle,MoyMod[i]);
+        fprintf(fichier,"%s : %.2f/20\n",P.note[i].libelle,MoyMod[i]);
     }
-    fprintf(fichier,"La moyenne generale du filière est: %.2f/20\n", calculer_Moyenne_Generale_Rapport(li));
+    fprintf(fichier,"La moyenne generale de la filière GI1           : %.2f/20\n", calculer_Moyenne_Generale_Rapport(li));
     fclose(fichier);
     free(MoyMod);
 }
@@ -531,7 +531,7 @@ void Suprimer_Etudiant(Liste* li, int pos){
     if (pos == 1) {
         li->tete = Courant->suivant; // La tête de liste avance au nœud suivant
         printf("L'étudiant de position %d est supprimé avec succès.\n", pos);
-        sprintf(nom_fichier, "%s_rapport.txt", Courant->nom);
+        sprintf(nom_fichier, "%s.%d_rapport.txt", Courant->nom,Courant->Id);
         if(remove(nom_fichier) == 0){
         printf("Le fichier '%s' a ete supprime avec succes.\n", nom_fichier);
         } else {

@@ -1,0 +1,19 @@
+identifiant: 102 
+nom:         Moeniss 
+prenom:      Douae 
+age:         19 
+Theorie des Graphes et Recherche Operationnelle: 18.00 
+Architecture des Ordinateurs & Assembleur      : 17.00 
+Base des Donnees Relationnelles                : 19.00 
+Reseaux Informatiques                          : 17.00 
+Structure de Donnees en C                      : 14.00 
+Langues etrangeres 1                           : 18.00 
+Digital Skills                                 : 19.00 
+Systemes d'Exploitation et Linux               : 18.00 
+Modelisation Oriente Objet                     : 17.00 
+Theories des Langages et Compilation           : 15.00 
+Developpement Web                              : 16.00 
+Programmation Oriente Objet Java               : 17.00 
+Langues etrangeres 2                           : 18.00 
+Culture & Arts & Sport Skills                  : 19.50 
+moyenne generale                               : 17.32 
