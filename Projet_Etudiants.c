@@ -308,7 +308,7 @@ void* modifier_infor(Liste* li,int positions) {
         printf("Entrez le nouveau nom: ");
         char nomfich[100];
         char nvnom[100];
-        sprintf(nomfich,"%s_rapport.txt",courant->nom);
+        sprintf(nomfich,"%s.%d_rapport.txt",courant->nom,courant->Id);
         scanf(" %[^\n]", courant->nom);
         sprintf(nvnom,"%s.%d_rapport.txt", courant->nom,courant->Id);
         if (rename(nomfich, nvnom) == 0) {
