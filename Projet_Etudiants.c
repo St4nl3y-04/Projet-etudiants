@@ -296,7 +296,7 @@ void* modifier_infor(Liste* li,int positions) {
         courant = courant->suivant;
     }
     do{
-        afficher_menu_modifier(courant);
+        Afficher_menu_modification_principale();
         scanf("%d",&l);
         printf("Modification des informations de l'étudiant:\n");
         switch (l){
@@ -563,6 +563,9 @@ void Suprimer_Etudiant(Liste* li, int pos){
 int main (){
     int C,k;
     Liste* liste = lire_fichier_txt();
+    if(liste->nef==0){
+        liste=Creer_Liste_Etudiants();
+    }
     do{
         afficher_menu();
         scanf("%d",&C);
