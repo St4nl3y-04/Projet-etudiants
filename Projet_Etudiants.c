@@ -286,7 +286,6 @@ void Rech_Pos_Occ(int *pos, const int nbt){
 }
 void* modifier_infor(Liste* li,int positions) {
     int l;
-    
     if (positions ==0 ) {
         printf("Étudiant non trouvé.\n");
         return NULL;
@@ -297,13 +296,22 @@ void* modifier_infor(Liste* li,int positions) {
         courant = courant->suivant;
     }
     do{
-        Recherche_tous(li);
+        afficher_menu_modifier(courant);
         scanf("%d",&l);
         printf("Modification des informations de l'étudiant:\n");
         switch (l){
         case 1:
         printf("Entrez le nouveau identifiant: ");
+        char nomfich_1[100];
+        char nvnom_1[100];
+        sprintf(nomfich_1,"%s.%d_rapport.txt",courant->nom,courant->Id);
         scanf("%d",&courant->Id);
+        sprintf(nvnom_1,"%s.%d_rapport.txt", courant->nom,courant->Id);
+        if (rename(nomfich_1, nvnom_1) == 0) {
+            printf("Le fichier '%s' a ete renomme en '%s' avec succes.\n", nomfich_1, nvnom_1);
+        } else {
+            perror("Erreur lors du renommage du fichier");
+        }
         break;
         case 2:
         printf("Entrez le nouveau nom: ");
@@ -441,47 +449,45 @@ void afficher_menu_recherche(){
     printf("Choisissez une option: ");
 }
 int Recherche_tous (Liste* liste){
-    int R;
-    int nbt=0;
-    int position=0;
-    int* L=(int*)malloc(sizeof(int));
-    do
-    {
-        afficher_menu_recherche();
-        scanf("%d",&R);
-        nbt=0;
-        position=0;
-        switch (R)
-        {
-            case 1:
-            L=Recherche_et_Affichage_des_Informations_nom(liste,&nbt);
-            if(L==NULL){
-                return 0;
-            }
-            position=L[0];
-            break;
-            case 2:
-            L=Recherche_et_Affichage_des_Informations_age(liste,&nbt);
-            if(L==NULL){
-                return 0;
-            }
-            position=L[0];
-            break;
-            case 3:
-            position=Recherche_et_Affichage_des_Informations_identifiant(liste);
-            if(position>1){
-                nbt=1;
-            }else if(position==0){
-                return 0;
-            }
-            break;
-            case 5:
-            break;
-            default:
-            printf("Option invalide\n");
-            break;
-            }
-        } while (nbt!=1);
+            int R;
+            int nbt=0;
+            int position=0;
+            int* L=(int*)malloc(sizeof(int));
+            do
+            {
+                afficher_menu_recherche();
+                scanf("%d",&R);
+                nbt=0;
+                position=0;
+                switch (R)
+                {
+                    case 1:
+                    L=Recherche_et_Affichage_des_Informations_nom(liste,&nbt);
+                    if(L==NULL){
+                        return 0;
+                    }
+                    position=L[0];
+                    break;
+                    case 2:
+                    L=Recherche_et_Affichage_des_Informations_age(liste,&nbt);
+                    if(L==NULL){
+                        return 0;
+                    }
+                    position=L[0];
+                    break;
+                    case 3:
+                    position=Recherche_et_Affichage_des_Informations_identifiant(liste);
+                    if(position>1){
+                        nbt=1;
+                    }
+                    break;
+                    case 5:
+                    break;
+                    default:
+                    printf("Option invalide\n");
+                    break;
+                }
+            } while (R!=4 && nbt != 1);
             return position;
 }
 float* calculer_Moyenne_Module_Rapport(Liste* li){
@@ -552,7 +558,7 @@ void Suprimer_Etudiant(Liste* li, int pos){
     }
     temp=Courant->suivant;
     Courant->suivant=temp->suivant;
-    sprintf(nom_fichier, "%s_rapport.txt", temp->nom);
+    sprintf(nom_fichier, "%s.%d_rapport.txt", temp->nom,temp->Id);
     if(remove(nom_fichier) == 0){
         printf("Le fichier '%s' a ete supprime avec succes.\n", nom_fichier);
     } else {
