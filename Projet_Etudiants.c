@@ -296,7 +296,7 @@ void* modifier_infor(Liste* li,int positions) {
         courant = courant->suivant;
     }
     do{
-        Afficher_menu_modification_principale();
+        Recherche_tous(li);
         scanf("%d",&l);
         printf("Modification des informations de l'étudiant:\n");
         switch (l){
@@ -560,12 +560,34 @@ void Suprimer_Etudiant(Liste* li, int pos){
     li->nef--;
     Generer_Rapport_Academique(li);
 }
+Liste* check_and_load_file() {
+    char filename[50];
+    strcpy(filename,"pEtudiants.txt");
+    FILE* file = fopen(filename, "r");
+    if (!file) {
+        printf("Le fichier \"%s\" n'existe pas. Une nouvelle liste sera créée.\n", filename);
+        creer_fichier_txt();
+        Liste* liste=Creer_Liste_Etudiants();
+        return liste;
+    }
+    int line_count = 0;
+    char buffer[512]; // Temporary buffer to read lines
+    while (fgets(buffer, sizeof(buffer), file) != NULL) {
+        line_count++;
+    }
+    fclose(file);
+    if (line_count <= 2) {
+        printf("Le fichier \"%s\" est vide ou contient uniquement deux lignes. Une nouvelle liste sera créée.\n", filename);
+        Liste* liste=Creer_Liste_Etudiants();
+        return liste;
+    }
+    printf("Le fichier \"%s\" est valide. Chargement des données...\n",filename);
+    Liste* liste=lire_fichier_txt();
+    return liste; // Your existing function to load data from the file
+}
 int main (){
     int C,k;
-    Liste* liste = lire_fichier_txt();
-    if(liste->nef==0){
-        liste=Creer_Liste_Etudiants();
-    }
+    Liste* liste=check_and_load_file();
     do{
         afficher_menu();
         scanf("%d",&C);
