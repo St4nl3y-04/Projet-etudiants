@@ -4,6 +4,11 @@
 #include <time.h>
 #include <string.h> 
 #define NBR_NOTES 14
+#define RESET "\033[0m"
+#define RED "\033[31m"       // Red text
+#define GREEN "\033[32m" 
+#define CYAN "\033[36m"
+#define BOLD "\033[1m" 
 typedef struct {
     char libelle[100];
     float valeur;
@@ -148,11 +153,21 @@ void bultane_etu(EtudiantRepere*p){
 EtudiantRepere * Creer_Etudiant(){
     EtudiantRepere *P=(EtudiantRepere*)malloc(sizeof(EtudiantRepere));
     int V=1;
-    do{
-        printf("\nEntrez l'identifiant de l'etudiant :");
-        scanf(" %d", &P->Id);
-        V=check_ID(P->Id);
-    }while (V==1);
+    do {
+        printf("\nEntrez l'identifiant de l'étudiant :");
+        if (scanf(" %d", &P->Id) != 1) { // Vérifie si l'entrée est un entier valide
+            printf("Erreur : Veuillez entrer un entier valide.\n");
+            while (getchar() != '\n'); // Nettoie le buffer pour éviter une boucle infinie
+            continue; // Recommence la boucle
+        }
+        V = check_ID(P->Id); // Vérifie la validité de l'ID
+        if (V == 1) {
+            printf(RED "Cet ID est déjà utilisé. Veuillez en entrer un autre.\n" RESET);
+        } else {
+            break; // Sort de la boucle si tout est valide
+        }
+    } while (1);
+    fflush(stdin);
     printf("Entrez le nom de l'etudiant :");
     scanf(" %[^\n]", P->nom);
     printf("Entrez le prenom de l'etudiant :");
@@ -173,7 +188,12 @@ EtudiantRepere * Creer_Etudiant(){
     P->Moy=calculer_Moyenne(P);
     P->suivant=NULL;
     FILE* fichier = fopen("pEtudiants.txt", "a");
-    fprintf(fichier, "%d\t| %s\t| %s\t| %i\t| %02d/%02d/%02d\t|", P->Id, P->nom, P->prenom, P->age, P->date.jour, P->date.mois,P->date.annee);
+    if (fichier=NULL)
+    {
+        printf(RED "Erreur d'ouverture" RESET);
+        return NULL;
+    }
+    fprintf(fichier,RED"%d\t| %s\t| %s\t| %i\t| %02d/%02d/%02d\t|"RESET, P->Id, P->nom, P->prenom, P->age, P->date.jour, P->date.mois,P->date.annee);
     for (int i = 0; i < NBR_NOTES; i++) {
         fprintf(fichier, "%.2f/20\t| ", P->note[i].valeur);
     }
@@ -281,14 +301,12 @@ int check_ID(int ID) {
     int found=0;
     while(courant!=NULL){
         if(courant-> Id==ID){
-            printf("L'ID que vous avez saisit existe deja dans la base de donnees, veuillez tapez un ID unique \n");
             found=1;
             break;
             }
         courant=courant->suivant;  
     }
     if(!found){
-        printf("L'ID est valide.\n");
         return -1;
     }
     return 1;
@@ -318,11 +336,12 @@ int Recherche_et_Affichage_des_Informations_identifiant(Liste* li) {
     return pos;
 }
 void afficher_menu_modifier(EtudiantRepere*p) {
-    printf("\nMenu de modification des informations de l'étudiant :\n");
-    printf("1. Changer l'identifiant\n");
-    printf("2. Changer le nom\n");
-    printf("3. Changer le prénom\n");
-    printf("4. Changer l'âge\n");
+    printf(CYAN BOLD"\n<===================Menu Modification===================>\n");
+    printf("                1. Changer l'identifiant\n");
+    printf("                2. Changer le nom\n");
+    printf("                3. Changer le prénom\n");
+    printf("                4. Changer l'âge\n");
+    printf("\n<===================Menu Modification===================>\n"RESET);
 
     // Affichage pour les 14 notes
     for (int i = 0; i < NBR_NOTES; i++) {
@@ -359,14 +378,28 @@ void modifier_infor(Liste *li, int positions)
         printf("Modification des informations de l'étudiant:\n");
         switch (l){
         case 1:
-        printf("Entrez le nouveau identifiant: ");
+        printf("Modification par nom: ");
         char nomfich_1[100];
         char nvnom_1[100];
         sprintf(nomfich_1,"%s.%d_rapport.txt",courant->nom,courant->Id);
-        scanf("%d",&courant->Id);
+        int V;
+        do {
+            printf("\nEntrez l'identifiant de l'étudiant :");
+            if (scanf(" %d", &courant->Id) != 1) { // Vérifie si l'entrée est un entier valide
+                printf(RED "Erreur : Veuillez entrer un entier valide.\n" RESET);
+                while (getchar() != '\n'); // Nettoie le buffer pour éviter une boucle infinie
+                continue; // Recommence la boucle
+            }
+            V = check_ID(courant->Id); // Vérifie la validité de l'ID
+            if (V == 1) {
+                printf(RED "Cet ID est déjà utilisé. Veuillez en entrer un autre.\n"RESET);
+            } else {
+                break; // Sort de la boucle si tout est valide
+            }
+        } while (1);
         sprintf(nvnom_1,"%s.%d_rapport.txt", courant->nom,courant->Id);
         if (rename(nomfich_1, nvnom_1) == 0) {
-            printf("Le fichier '%s' a ete renomme en '%s' avec succes.\n", nomfich_1, nvnom_1);
+            printf(GREEN"Le fichier '%s' a ete renomme en '%s' avec succes.\n" RESET, nomfich_1, nvnom_1);
         } else {
             perror("Erreur lors du renommage du fichier");
         }
@@ -379,9 +412,9 @@ void modifier_infor(Liste *li, int positions)
         scanf(" %[^\n]", courant->nom);
         sprintf(nvnom,"%s.%d_rapport.txt", courant->nom,courant->Id);
         if (rename(nomfich, nvnom) == 0) {
-            printf("Le fichier '%s' a ete renomme en '%s' avec succes.\n", nomfich, nvnom);
+            printf(GREEN"Le fichier '%s' a ete renomme en '%s' avec succes.\n"RESET, nomfich, nvnom);
         } else {
-            perror("Erreur lors du renommage du fichier");
+            perror(RED"Erreur lors du renommage du fichier"RESET);
         }
         break;
         case 3:
@@ -404,7 +437,7 @@ void modifier_infor(Liste *li, int positions)
                     printf("Option invalide.\n");
                 }
                 break;}
-    printf("Modification effectuée.\n");
+    printf(GREEN"Modification effectuée.\n"RESET);
     courant->age = calculerAge(courant);
     courant->Moy = calculer_Moyenne(courant);
     printf("Les informations ont été modifiées avec succès.\n");
@@ -425,7 +458,7 @@ int* Recherche_et_Affichage_des_Informations_age(Liste* li,int* nbt) {
     int* pos=NULL;
     while(courant!=NULL){
         if(courant->age==age){
-            printf("les informations de l etu qui a l age %d sont \n",age);
+            printf(GREEN"les informations de l'etudiant(s) qui a l age %d sont \n"RESET,age);
             afficherEtudiant(courant);
             found=1;
             pos=realloc(pos,((*nbt)+1)*sizeof(int));
@@ -441,7 +474,7 @@ int* Recherche_et_Affichage_des_Informations_age(Liste* li,int* nbt) {
         courant=courant->suivant;
     }
     if(!found){
-        printf("l etu n existe pas dans la base");
+        printf("\nl'etudiant n'existe pas.\n");
         return NULL;
     }
 return pos;
@@ -449,7 +482,7 @@ return pos;
 Liste* lire_fichier_txt () {
     FILE *F=fopen("pEtudiants.txt","r");
     if ((F)==NULL) {
-        perror ("Erreur d'ouverture du fichier");
+        perror (RED"Erreur d'ouverture du fichier"RESET);
         return NULL;
     }
     Liste* li=Creer_Liste_Etudiants();
@@ -488,22 +521,24 @@ Liste* lire_fichier_txt () {
     return li;
 }
 void afficher_menu() {
-    printf("\nMenu Principale:\n");
-    printf("1. Ajouter un etudiant\n");
-    printf("2. Afficher la liste d'etudiants\n");
-    printf("3. Supprimer un etudiant\n");
-    printf("4. chercher un etudiant\n");
-    printf("5. Modifier un etudiant\n");
-    printf("6. Generer un Rapport academique.\n");
-    printf("7. Quitter le programme\n");
+    printf(CYAN BOLD"\n<===================Menu Principale===================>\n");
+    printf("                 1. Ajouter un etudiant\n");
+    printf("                 2. Afficher la liste d'etudiants\n");
+    printf("                 3. Supprimer un etudiant\n");
+    printf("                 4. chercher un etudiant\n");
+    printf("                 5. Modifier un etudiant\n");
+    printf("                 6. Generer un Rapport academique.\n");
+    printf("                 7. Quitter le programme");
+    printf("\n<===================Menu Principale===================>\n"RESET);
     printf("Choisissez une option: ");
 }
 void afficher_menu_recherche(){
-    printf("\nMenu  de recherche:\n");
+    printf(CYAN BOLD"\n<===================Menu Recherche===================>\n");
     printf("1. chercher par nom\n");
     printf("2. chercher par age\n");
     printf("3. chercher par identifiant\n");
-    printf("4. Quitter le menu de recherche vers menu principale\n");
+    printf("4. Quitter le menu de recherche vers menu principale");
+    printf("\n<===================Menu Recherche===================>\n"RESET);
     printf("Choisissez une option: ");
 }
 int Recherche_tous (Liste* liste){
@@ -537,10 +572,8 @@ int Recherche_tous (Liste* liste){
                 nbt=1;
             }
             break;
-            case 5:
-            break;
             default:
-            printf("Option invalide\n");
+            printf(RED"Option invalide\n"RESET);
             break;
         }
     } while (R!=4 && nbt != 1);
@@ -589,7 +622,9 @@ int Validation(Liste* li){
 void Generer_Rapport_Academique(Liste* li){
     FILE* fichier=fopen("Rapport_Academique.txt","w");
     fprintf(fichier,"<=================== Rapport Académique ===================>\n");
-    printf("<=================== Rapport Academique ===================>\n");
+    printf(CYAN BOLD"<=================== Rapport Academique ===================>\n"RESET);
+    fprintf(fichier,"Les moyennes generaux de chaque Module:\n");
+    printf(BOLD"Les moyennes generaux de chaque Module:\n"RESET);
     EtudiantRepere P;
     Libelle_notes(&P);
     float* MoyMod=calculer_Moyenne_Module_Rapport(li);
@@ -599,9 +634,9 @@ void Generer_Rapport_Academique(Liste* li){
     }
     float B=calculer_Moyenne_Generale_Rapport(li);
     fprintf(fichier,"La moyenne generale de la filière GI1           : %.2f/20\n", B);
-    printf("La moyenne generale de la filiere GI1           : %.2f/20\n", B);
+    printf(BOLD"La moyenne generale de la filiere GI1           : %.2f/20\n", B);
     fprintf(fichier,"Le nombre des étudiants dans la filière GI1           : %d\n", li->nef);
-    printf("Le nombre des etudiants dans la filiere GI1            : %d\n", li->nef);
+    printf("Le nombre des etudiants dans la filiere GI1           : %d\n", li->nef);
     int V=Validation(li);
     fprintf(fichier,"Le nombre des étudiants qui ont validée l'année       : %d/%d\n",V,li->nef);
     printf("Le nombre des etudiants qui ont validee l'annee       : %d/%d\n", V, li->nef);
@@ -613,9 +648,9 @@ void Generer_Rapport_Academique(Liste* li){
     }else {
         float T = ((float)V/li->nef)*100;
         fprintf(fichier,"Taux de validation: %.2f%%\n",T);
-        printf("Taux de validation: %.2f%%\n",T);
+        printf("Taux de validation: %.2f%%\n",T );
     }
-    printf("<================= Fin Rapport Academique =================>\n");
+    printf(CYAN BOLD"<================= Fin Rapport Academique =================>\n"RESET);
     fclose(fichier);
     free(MoyMod);
 }
@@ -627,7 +662,7 @@ void Suprimer_Etudiant(Liste* li, int pos){
     char nom_fichier[100];
     if (pos == 1) {
         li->tete = Courant->suivant; // La tête de liste avance au nœud suivant
-        printf("L'étudiant de position %d est supprimé avec succès.\n", pos);
+        printf(GREEN "L'étudiant de position %d est supprimé avec succès.\n"RESET, pos );
         sprintf(nom_fichier, "%s.%d_rapport.txt", Courant->nom,Courant->Id);
         if(remove(nom_fichier) == 0){
         printf("Le fichier '%s' a ete supprime avec succes.\n", nom_fichier);
@@ -641,19 +676,19 @@ void Suprimer_Etudiant(Liste* li, int pos){
         Courant=Courant->suivant;
     }
     if (Courant == NULL || Courant->suivant == NULL) {
-        printf("Position invalide. Aucun étudiant n'a été supprimé.\n");
+        printf(RED"Aucun étudiant n'a été supprimé.\n"RESET);
         return;
     }
     temp=Courant->suivant;
     Courant->suivant=temp->suivant;
     sprintf(nom_fichier, "%s.%d_rapport.txt", temp->nom,temp->Id);
     if(remove(nom_fichier) == 0){
-        printf("Le fichier '%s' a ete supprime avec succes.\n", nom_fichier);
+        printf(GREEN"Le fichier '%s' a ete supprime avec succes.\n" RESET, nom_fichier);
     } else {
-        perror("Erreur lors de la suppression du fichier");
+        perror(RED"Erreur lors de la suppression du fichier"RESET);
     }
     free(temp);
-    printf("L'etudiant de position %d est supprime avec succes.\n", pos);
+    printf(GREEN"L'etudiant est supprime avec succes.\n"RESET);
     li->nef--;
     Generer_Rapport_Academique(li);
 }
@@ -662,7 +697,6 @@ Liste* check_and_load_file() {
     strcpy(filename,"pEtudiants.txt");
     FILE* file = fopen(filename, "r");
     if (!file) {
-        printf("Le fichier \"%s\" n'existe pas. Une nouvelle liste sera créée.\n", filename);
         creer_fichier_txt();
         Liste* liste=Creer_Liste_Etudiants();
         return liste;
@@ -674,11 +708,9 @@ Liste* check_and_load_file() {
     }
     fclose(file);
     if (line_count <= 2) {
-        printf("Le fichier \"%s\" est vide ou contient uniquement deux lignes. Une nouvelle liste sera créée.\n", filename);
         Liste* liste=Creer_Liste_Etudiants();
         return liste;
     }
-    printf("Le fichier \"%s\" est valide. Chargement des données...\n",filename);
     Liste* liste=lire_fichier_txt();
     return liste; // Your existing function to load data from the file
 }
@@ -696,7 +728,7 @@ int main (){
             afficher_liste_Etudiant(liste);
             break;
             case 3:
-            printf("veuiller saisir le nom de l etu que souhaiter suprimer: ");
+            printf("veuiller chercher l'etudiant que vous souhaitez suprimer: ");
             int Z=0;
             Z=Recherche_tous(liste);
             if(Z>0){
