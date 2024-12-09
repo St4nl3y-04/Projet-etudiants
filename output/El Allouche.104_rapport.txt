@@ -1,0 +1,20 @@
+identifiant: 104 
+nom:         El Allouche 
+prenom:      Zakaria 
+age:         18 
+Theorie des Graphes et Recherche Operationnelle: 15.00/20 
+Architecture des Ordinateurs & Assembleur      : 17.00/20 
+Base des Donnees Relationnelles                : 17.00/20 
+Reseaux Informatiques                          : 18.00/20 
+Structure de Donnees en C                      : 19.00/20 
+Langues etrangeres 1                           : 17.00/20 
+Digital Skills                                 : 20.00/20 
+Systemes d'Exploitation et Linux               : 20.00/20 
+Modelisation Oriente Objet                     : 14.00/20 
+Theories des Langages et Compilation           : 18.00/20 
+Developpement Web                              : 19.00/20 
+Programmation Oriente Objet Java               : 16.00/20 
+Langues etrangeres 2                           : 17.00/20 
+Culture & Arts & Sport Skills                  : 18.00/20 
+moyenne generale                               : 17.50/20 
+Année validée.

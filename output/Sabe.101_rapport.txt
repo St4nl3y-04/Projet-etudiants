@@ -1,0 +1,20 @@
+identifiant: 101 
+nom:         Sabe 
+prenom:      Mohammed Aymane 
+age:         19 
+Theorie des Graphes et Recherche Operationnelle: 15.00/20 
+Architecture des Ordinateurs & Assembleur      : 17.00/20 
+Base des Donnees Relationnelles                : 20.00/20 
+Reseaux Informatiques                          : 20.00/20 
+Structure de Donnees en C                      : 20.00/20 
+Langues etrangeres 1                           : 19.00/20 
+Digital Skills                                 : 18.00/20 
+Systemes d'Exploitation et Linux               : 17.00/20 
+Modelisation Oriente Objet                     : 1.00/20 
+Theories des Langages et Compilation           : 20.00/20 
+Developpement Web                              : 20.00/20 
+Programmation Oriente Objet Java               : 20.00/20 
+Langues etrangeres 2                           : 20.00/20 
+Culture & Arts & Sport Skills                  : 20.00/20 
+moyenne generale                               : 17.64/20 
+Année validée.
