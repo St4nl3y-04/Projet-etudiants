@@ -9,6 +9,7 @@
 #define GREEN "\033[32m" 
 #define CYAN "\033[36m"
 #define BOLD "\033[1m" 
+#define YELLOW "\033[33m"
 typedef struct {
     char libelle[100];
     float valeur;
@@ -46,7 +47,6 @@ int* Recherche_et_Affichage_des_Informations_nom(Liste* li,int *nbt);
 int check_ID(int a);
 int Recherche_et_Affichage_des_Informations_identifiant(Liste* li);
 void afficher_menu_modifier(EtudiantRepere*p);
-void Rech_Pos_Occ(int* pos, const int nbt);
 void modifier_infor(Liste* li,int positions);
 int* Recherche_et_Affichage_des_Informations_age(Liste* li,int* nbt);
 Liste* lire_fichier_txt ();
@@ -57,13 +57,16 @@ float* calculer_Moyenne_Module_Rapport(Liste* li);
 float calculer_Moyenne_Generale_Rapport(Liste* li);
 int Validation(Liste* li);
 void Generer_Rapport_Academique(Liste* li);
-void Suprimer_Etudiant(Liste* li, int pos);
+void Supprimer_Etudiant(Liste* li, int pos);
 Liste* check_and_load_file();
+int demanderEntier(const char* message);
+int valide_datenaissance(EtudiantRepere* P);
+void rapport_etu();
 Liste * Creer_Liste_Etudiants(){
     Liste *Li;
     Li = (Liste*)malloc(sizeof(Liste));
     if (Li == NULL) {
-        perror("Erreur d'allocation mémoire");
+        perror(RED "Erreur d'allocation mémoire" RESET);
         exit(EXIT_FAILURE);
     }
     Li -> tete = NULL;
@@ -132,7 +135,7 @@ void bultane_etu(EtudiantRepere*p){
     sprintf(nom_fichier, "%s.%d_rapport.txt", p->nom,p->Id);
     FILE*file=fopen(nom_fichier,"w");
     if (file == NULL) {
-        printf("Erreur d'ouverture du fichier.\n");
+        printf(RED "Erreur d'ouverture du fichier.\n" RESET );
         return;
     }
     fprintf(file,"identifiant: %d \n",p->Id);
@@ -153,27 +156,21 @@ void bultane_etu(EtudiantRepere*p){
 EtudiantRepere * Creer_Etudiant(){
     EtudiantRepere *P=(EtudiantRepere*)malloc(sizeof(EtudiantRepere));
     int V=1;
-    do {
-        printf("\nEntrez l'identifiant de l'étudiant :");
-        if (scanf(" %d", &P->Id) != 1) { // Vérifie si l'entrée est un entier valide
-            printf("Erreur : Veuillez entrer un entier valide.\n");
-            while (getchar() != '\n'); // Nettoie le buffer pour éviter une boucle infinie
-            continue; // Recommence la boucle
-        }
-        V = check_ID(P->Id); // Vérifie la validité de l'ID
-        if (V == 1) {
-            printf(RED "Cet ID est déjà utilisé. Veuillez en entrer un autre.\n" RESET);
-        } else {
-            break; // Sort de la boucle si tout est valide
-        }
-    } while (1);
-    fflush(stdin);
+    do{
+        P->Id=demanderEntier("\nEntrez l'identifiant de l'etudiant :");
+        V=check_ID(P->Id);
+    }while (V==1);
     printf("Entrez le nom de l'etudiant :");
     scanf(" %[^\n]", P->nom);
     printf("Entrez le prenom de l'etudiant :");
     scanf(" %[^\n]", P->prenom);
-    printf("Entrez la date de naissance (jour mois annee) :");
-    scanf("%d %d %d", &P->date.jour, &P->date.mois, &P->date.annee);
+    int B;
+    do
+    {
+        printf("Entrez la date de naissance (jour mois annee) :");
+        scanf("%d %d %d", &P->date.jour, &P->date.mois, &P->date.annee);
+        B=valide_datenaissance(P);
+    } while (B==-1);
     P->age=calculerAge(P);
     Libelle_notes(P);
     for (int i = 0; i < NBR_NOTES; i++) { 
@@ -188,12 +185,12 @@ EtudiantRepere * Creer_Etudiant(){
     P->Moy=calculer_Moyenne(P);
     P->suivant=NULL;
     FILE* fichier = fopen("pEtudiants.txt", "a");
-    if (fichier=NULL)
+    if (fichier==NULL)
     {
         printf(RED "Erreur d'ouverture" RESET);
         return NULL;
     }
-    fprintf(fichier,RED"%d\t| %s\t| %s\t| %i\t| %02d/%02d/%02d\t|"RESET, P->Id, P->nom, P->prenom, P->age, P->date.jour, P->date.mois,P->date.annee);
+    fprintf(fichier,"%d\t| %s\t| %s\t| %i\t| %02d/%02d/%02d\t|", P->Id, P->nom, P->prenom, P->age, P->date.jour, P->date.mois,P->date.annee);
     for (int i = 0; i < NBR_NOTES; i++) {
         fprintf(fichier, "%.2f/20\t| ", P->note[i].valeur);
     }
@@ -301,12 +298,14 @@ int check_ID(int ID) {
     int found=0;
     while(courant!=NULL){
         if(courant-> Id==ID){
+            printf("L'ID que vous avez saisit existe deja dans la base de donnees, veuillez tapez un ID unique \n");
             found=1;
             break;
             }
         courant=courant->suivant;  
     }
     if(!found){
+        printf("L'ID est valide.\n");
         return -1;
     }
     return 1;
@@ -340,68 +339,46 @@ void afficher_menu_modifier(EtudiantRepere*p) {
     printf("                1. Changer l'identifiant\n");
     printf("                2. Changer le nom\n");
     printf("                3. Changer le prénom\n");
-    printf("                4. Changer l'âge\n");
-    printf("\n<===================Menu Modification===================>\n"RESET);
+    printf("                4. Changer Date de naissance\n");
 
     // Affichage pour les 14 notes
     for (int i = 0; i < NBR_NOTES; i++) {
         printf("%d. Modifier la note %s\n", 5+i, p->note[i].libelle);
     }
     printf("19. Retour au menu principal\n");
-    printf("Veuillez choisir une option : ");
+    printf("\n<===================Menu Modification===================>\n"RESET);
 }
-
-void Rech_Pos_Occ(int* pos, const int nbt)
-{
-    if(nbt != 0){
-        printf("Nombre d'etudiants trouvée: %d", nbt);
-        for(int i=0;i<nbt;i++){
-            printf("\nLa postion de l'etudinat n '%d' trouvee est: %d",i+1,pos[i]);
-        }
-    }
-}
-void modifier_infor(Liste *li, int positions)
-{
+void modifier_infor(Liste *li, int positions){
     int l;
     if (positions ==0 ) {
         printf("Étudiant non trouvé.\n");
         return;
     }
-
     EtudiantRepere* courant = li->tete;
     for (int i = 1; i < positions; i++) { 
         courant = courant->suivant;
     }
+    int B;
     do{
         afficher_menu_modifier(courant);
-        scanf("%d",&l);
+        l=demanderEntier("Choisissez une option: ");
         printf("Modification des informations de l'étudiant:\n");
         switch (l){
         case 1:
-        printf("Modification par nom: ");
+        printf("Modification par ID: \n");
         char nomfich_1[100];
         char nvnom_1[100];
         sprintf(nomfich_1,"%s.%d_rapport.txt",courant->nom,courant->Id);
-        int V;
-        do {
-            printf("\nEntrez l'identifiant de l'étudiant :");
-            if (scanf(" %d", &courant->Id) != 1) { // Vérifie si l'entrée est un entier valide
-                printf(RED "Erreur : Veuillez entrer un entier valide.\n" RESET);
-                while (getchar() != '\n'); // Nettoie le buffer pour éviter une boucle infinie
-                continue; // Recommence la boucle
-            }
-            V = check_ID(courant->Id); // Vérifie la validité de l'ID
-            if (V == 1) {
-                printf(RED "Cet ID est déjà utilisé. Veuillez en entrer un autre.\n"RESET);
-            } else {
-                break; // Sort de la boucle si tout est valide
-            }
-        } while (1);
+        int V=1;
+        do{
+            courant->Id=demanderEntier("\nEntrez l'identifiant de l'etudiant :");
+            V=check_ID(courant->Id);
+        }while (V==1);
         sprintf(nvnom_1,"%s.%d_rapport.txt", courant->nom,courant->Id);
         if (rename(nomfich_1, nvnom_1) == 0) {
             printf(GREEN"Le fichier '%s' a ete renomme en '%s' avec succes.\n" RESET, nomfich_1, nvnom_1);
         } else {
-            perror("Erreur lors du renommage du fichier");
+            perror(RED"Erreur lors du renommage du fichier"RESET);
         }
         break;
         case 2:
@@ -418,34 +395,36 @@ void modifier_infor(Liste *li, int positions)
         }
         break;
         case 3:
-        printf("Entrez le nouveau prénom: ");
+        printf("Entrez le nouveau prenom: ");
         scanf(" %[^\n]", courant->prenom);
         break;
         case 4:
-        printf("Entrez la nouvelle date de naissance (jour mois année): ");
-        scanf("%d %d %d", &courant->date.jour, &courant->date.mois, &courant->date.annee);
+        do{
+            printf("Entrez la date de naissance (jour mois annee) :");
+            scanf("%d %d %d", &courant->date.jour, &courant->date.mois, &courant->date.annee);
+            B=valide_datenaissance(courant);
+        }while (B==-1);
         break;
         case 19:
-                printf("Retour au menu principal.\n");
-                return;
-            default:
-                if (l >= 5 && l < 5 + NBR_NOTES) {
-                    int index = l - 5;
-                    printf("Entrez la nouvelle valeur pour la note %d (%s) : ", index + 1, courant->note[index].libelle);
-                    scanf("%f", &courant->note[index].valeur);
-                } else {
-                    printf("Option invalide.\n");
-                }
-                break;}
-    printf(GREEN"Modification effectuée.\n"RESET);
-    courant->age = calculerAge(courant);
-    courant->Moy = calculer_Moyenne(courant);
-    printf("Les informations ont été modifiées avec succès.\n");
-    creer_fichier_txt ();
-    enregistrer_liste_etudiant(li);
-    bultane_etu(courant);
-    return;
-     }while (l!=19);
+        printf("Retour au menu principal.\n");
+        return;
+        default:
+        if (l >= 5 && l < 5 + NBR_NOTES) {
+            int index = l - 5;
+            printf("Entrez la nouvelle valeur pour la note %d (%s) : ", index + 1, courant->note[index].libelle);
+            scanf("%f", &courant->note[index].valeur);
+            } else {
+                printf(RED"Option invalide.\n"RESET);
+            }
+            break;}
+        printf(GREEN"Modification effectuee.\n"RESET);
+        courant->age = calculerAge(courant);
+        courant->Moy = calculer_Moyenne(courant);
+        creer_fichier_txt ();
+        enregistrer_liste_etudiant(li);
+        bultane_etu(courant);
+        return;
+    }while (l!=19);
 }
 int* Recherche_et_Affichage_des_Informations_age(Liste* li,int* nbt) {
     EtudiantRepere *courant=li->tete;
@@ -463,7 +442,7 @@ int* Recherche_et_Affichage_des_Informations_age(Liste* li,int* nbt) {
             found=1;
             pos=realloc(pos,((*nbt)+1)*sizeof(int));
             if (pos == NULL) {
-                perror("Erreur de realloc");
+                perror(RED"Erreur de realloc"RESET);
                 free(pos); // Libérer la mémoire précédemment allouée
                 return NULL;
             }
@@ -474,7 +453,7 @@ int* Recherche_et_Affichage_des_Informations_age(Liste* li,int* nbt) {
         courant=courant->suivant;
     }
     if(!found){
-        printf("\nl'etudiant n'existe pas.\n");
+        printf(RED"\nl'etudiant n'existe pas.\n"RESET);
         return NULL;
     }
 return pos;
@@ -527,10 +506,10 @@ void afficher_menu() {
     printf("                 3. Supprimer un etudiant\n");
     printf("                 4. chercher un etudiant\n");
     printf("                 5. Modifier un etudiant\n");
-    printf("                 6. Generer un Rapport academique.\n");
-    printf("                 7. Quitter le programme");
+    printf("                 6. Rapport d'un etudiant\n");
+    printf("                 7. Generer un Rapport academique.\n");
+    printf("                 8. Quitter le programme");
     printf("\n<===================Menu Principale===================>\n"RESET);
-    printf("Choisissez une option: ");
 }
 void afficher_menu_recherche(){
     printf(CYAN BOLD"\n<===================Menu Recherche===================>\n");
@@ -539,7 +518,6 @@ void afficher_menu_recherche(){
     printf("3. chercher par identifiant\n");
     printf("4. Quitter le menu de recherche vers menu principale");
     printf("\n<===================Menu Recherche===================>\n"RESET);
-    printf("Choisissez une option: ");
 }
 int Recherche_tous (Liste* liste){
     int R;
@@ -548,7 +526,7 @@ int Recherche_tous (Liste* liste){
     int* L=(int*)malloc(sizeof(int));
     do{
         afficher_menu_recherche();
-        scanf("%d",&R);
+        R=demanderEntier("Choisissez une option: ");
         nbt=0;
         position=0;
         switch (R){
@@ -568,9 +546,12 @@ int Recherche_tous (Liste* liste){
             break;
             case 3:
             position=Recherche_et_Affichage_des_Informations_identifiant(liste);
-            if(position>1){
+            if(position>=1){
                 nbt=1;
             }
+            break;
+            case 4:
+            printf("\nRetour.");
             break;
             default:
             printf(RED"Option invalide\n"RESET);
@@ -622,7 +603,7 @@ int Validation(Liste* li){
 void Generer_Rapport_Academique(Liste* li){
     FILE* fichier=fopen("Rapport_Academique.txt","w");
     fprintf(fichier,"<=================== Rapport Académique ===================>\n");
-    printf(CYAN BOLD"<=================== Rapport Academique ===================>\n"RESET);
+    printf(RED BOLD"<=================== Rapport Academique ===================>\n"RESET);
     fprintf(fichier,"Les moyennes generaux de chaque Module:\n");
     printf(BOLD"Les moyennes generaux de chaque Module:\n"RESET);
     EtudiantRepere P;
@@ -650,11 +631,11 @@ void Generer_Rapport_Academique(Liste* li){
         fprintf(fichier,"Taux de validation: %.2f%%\n",T);
         printf("Taux de validation: %.2f%%\n",T );
     }
-    printf(CYAN BOLD"<================= Fin Rapport Academique =================>\n"RESET);
+    printf(RED BOLD"<================= Fin Rapport Academique =================>\n"RESET);
     fclose(fichier);
     free(MoyMod);
 }
-void Suprimer_Etudiant(Liste* li, int pos){
+void Supprimer_Etudiant(Liste* li, int pos){
     if (li == NULL || li->tete == NULL){
         exit(EXIT_FAILURE);
     }
@@ -665,7 +646,7 @@ void Suprimer_Etudiant(Liste* li, int pos){
         printf(GREEN "L'étudiant de position %d est supprimé avec succès.\n"RESET, pos );
         sprintf(nom_fichier, "%s.%d_rapport.txt", Courant->nom,Courant->Id);
         if(remove(nom_fichier) == 0){
-        printf("Le fichier '%s' a ete supprime avec succes.\n", nom_fichier);
+        printf(GREEN"Le fichier '%s' a ete supprime avec succes.\n" RESET, nom_fichier);
         } else {
         perror("Erreur lors de la suppression du fichier");
         }
@@ -690,7 +671,6 @@ void Suprimer_Etudiant(Liste* li, int pos){
     free(temp);
     printf(GREEN"L'etudiant est supprime avec succes.\n"RESET);
     li->nef--;
-    Generer_Rapport_Academique(li);
 }
 Liste* check_and_load_file() {
     char filename[50];
@@ -714,12 +694,75 @@ Liste* check_and_load_file() {
     Liste* liste=lire_fichier_txt();
     return liste; // Your existing function to load data from the file
 }
+int demanderEntier(const char* message) {
+    int valeur;
+    int c; 
+    while (1) {
+        printf("%s", message);
+        if (scanf("%d", &valeur) != 1) {
+            printf(RED"Entree invalide. Veuillez entrer un nombre entier\n"RESET);
+            while ((c = getchar()) != '\n' && c != EOF);
+            continue;
+        }
+        c = getchar();
+        if (c != '\n' && c != EOF) {
+            printf(RED"Entree invalide. Veuillez entrer un nombre entier sans caracteres supplementaires.\n"RESET);
+            while ((c = getchar()) != '\n' && c != EOF);
+            continue;
+        }
+        return valeur;
+    }
+}
+int valide_datenaissance(EtudiantRepere* P) {
+    // Tableau des jours par mois (par défaut, février a 28 jours)
+    int jours_par_mois[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    // Vérifie si l'année est bissextile
+    if ((P->date.annee % 4 == 0 && P->date.annee % 100 != 0) || (P->date.annee % 400 == 0)) {
+        jours_par_mois[1] = 29;  // Février a 29 jours dans une année bissextile
+    }
+    // Vérification du mois
+    if (P->date.mois < 1 || P->date.mois > 12) {
+        printf(RED"Mois invalide.\n"RESET);
+        return -1;
+    }
+    // Vérification du jour
+    if (P->date.jour < 1 || P->date.jour > jours_par_mois[P->date.mois - 1]) {
+        printf(RED"Jour invalide pour le mois %d.\n"RESET, P->date.mois);
+        return -1;
+    }
+    if(P->date.annee>2024 || P->date.annee<0){
+        printf(RED"Annee invalide.\n"RESET);
+        return -1;
+    }
+    // Si tout est valide
+    printf(GREEN"Date valide.\n"RESET);
+    return 1;
+}
+void rapport_etu() {
+    int ID;
+    char nom[50],nom_fichier[100];
+    ID=demanderEntier("\nVeuillez saisir L'ID: ");
+    printf("\nVeuillez saisir le nom: ");
+    scanf("%[^\n]",nom);
+    sprintf(nom_fichier,"%s.%d_rapport.txt",nom,ID);
+    FILE *fichier = fopen(nom_fichier, "r");
+    if (fichier == NULL) {
+        printf(RED"Erreur lors de l'ouverture du fichier"RESET);
+        return;
+    }
+    char ligne[256];
+    printf(YELLOW"\n<===========================Rapport %s.%d===========================>\n"RESET,nom,ID) ;
+    while (fgets(ligne, sizeof(ligne), fichier)) {
+        printf("%s", ligne);
+    }
+    printf(YELLOW"\n<===========================FIN Rapport %s.%d===========================>\n"RESET,nom,ID);
+}
 int main (){
     int C,k;
     Liste* liste=check_and_load_file();
     do{
         afficher_menu();
-        scanf("%d",&C);
+        C=demanderEntier("Choisissez une option: ");
         switch(C){
             case 1:
             ajouter_Etudiant_liste(liste);
@@ -732,7 +775,7 @@ int main (){
             int Z=0;
             Z=Recherche_tous(liste);
             if(Z>0){
-                Suprimer_Etudiant(liste,Z);
+                Supprimer_Etudiant(liste,Z);
             }
             creer_fichier_txt();
             enregistrer_liste_etudiant(liste);
@@ -740,48 +783,45 @@ int main (){
             case 4:
             do{   
                 afficher_menu_recherche();
-                scanf("%d",&k);
+                k=demanderEntier("Choisissez une option: ");
                 switch(k){
                     int nbt=0;
-                    int* pos=NULL;
                     case 1:
-                    pos=Recherche_et_Affichage_des_Informations_nom(liste,&nbt);
-                    Rech_Pos_Occ(pos,nbt);
+                    Recherche_et_Affichage_des_Informations_nom(liste,&nbt);
                     break;
                     case 2:
-                    pos=Recherche_et_Affichage_des_Informations_age(liste,&nbt);
-                    Rech_Pos_Occ(pos,nbt);
+                    Recherche_et_Affichage_des_Informations_age(liste,&nbt);
                     break;
                     case 3:
-                    printf("tst");
-                    int position;
-                    position = Recherche_et_Affichage_des_Informations_identifiant(liste);
-                    printf("La position de cet etudiant est: %d",position);
+                    Recherche_et_Affichage_des_Informations_identifiant(liste);
                     break;
                     default:
-                    printf("Option invalide, veuillez reessayer.\n");
+                    printf(RESET"Option invalide, veuillez reessayer.\n"RESET);
                     break;
                 }
-            }while (k!=4 && k!=5);
+            }while (k!=4);
             break;
             case 5:
-            printf("modification:\n");
+            printf("veuiller chercher l'etudiant que vous souhaitez modifier: ");
             int position=0;
             position=Recherche_tous(liste);
             if(position>0){
                 modifier_infor(liste,position);
             }
             break;
-            case 6: 
+            case 6:
+            rapport_etu();
+            break;
+            case 7: 
             Generer_Rapport_Academique(liste);
             break;
-            case 7:
+            case 8:
             printf("Au revoir");
             break;
             default:
-            printf("Option invalide, veuillez reessayer.\n");
+            printf(RED"Option invalide, veuillez reessayer.\n"RESET);
             break;
         }
-    }while (C != 7);
+    }while (C != 8);
     return 0;
 } 

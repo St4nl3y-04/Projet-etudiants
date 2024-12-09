@@ -1,21 +1,20 @@
 <=================== Rapport Académique ===================>
-Les moyennes generaux de chaque Module:
-Theorie des Graphes et Recherche Operationnelle : 17.89/20
-Architecture des Ordinateurs & Assembleur       : 17.11/20
-Base des Donnees Relationnelles                 : 17.44/20
-Reseaux Informatiques                           : 17.22/20
+Theorie des Graphes et Recherche Operationnelle : 17.30/20
+Architecture des Ordinateurs & Assembleur       : 16.70/20
+Base des Donnees Relationnelles                 : 17.10/20
+Reseaux Informatiques                           : 17.00/20
 Structure de Donnees en C                       : 17.00/20
-Langues etrangeres 1                            : 16.22/20
-Digital Skills                                  : 15.33/20
-Systemes d'Exploitation et Linux                : 17.56/20
-Modelisation Oriente Objet                      : 17.44/20
-Theories des Langages et Compilation            : 16.78/20
-Developpement Web                               : 15.22/20
-Programmation Oriente Objet Java                : 16.89/20
-Langues etrangeres 2                            : 18.00/20
-Culture & Arts & Sport Skills                   : 17.61/20
-La moyenne generale de la filière GI1           : 16.98/20
-Le nombre des étudiants dans la filière GI1           : 9
-Le nombre des étudiants qui ont validée l'année       : 9/9
-Le nombre des étudiants qui n'ont pas validée l'année : 0/9
+Langues etrangeres 1                            : 16.10/20
+Digital Skills                                  : 15.20/20
+Systemes d'Exploitation et Linux                : 17.20/20
+Modelisation Oriente Objet                      : 17.60/20
+Theories des Langages et Compilation            : 16.90/20
+Developpement Web                               : 15.70/20
+Programmation Oriente Objet Java                : 16.30/20
+Langues etrangeres 2                            : 17.30/20
+Culture & Arts & Sport Skills                   : 16.95/20
+La moyenne generale de la filière GI1           : 16.74/20
+Le nombre des étudiants dans la filière GI1           : 10
+Le nombre des étudiants qui ont validée l'année       : 10/10
+Le nombre des étudiants qui n'ont pas validée l'année : 0/10
 Taux de validation: 100%
