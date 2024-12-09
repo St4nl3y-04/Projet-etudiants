@@ -1,4 +1,4 @@
-Le rapport académique de la filière GI1: 
+<=================== Rapport Académique ===================>
 Theorie des Graphes et Recherche Operationnelle : 17.88/20
 Architecture des Ordinateurs & Assembleur       : 17.13/20
 Base des Donnees Relationnelles                 : 17.88/20
@@ -14,3 +14,7 @@ Programmation Oriente Objet Java                : 17.50/20
 Langues etrangeres 2                            : 17.88/20
 Culture & Arts & Sport Skills                   : 17.31/20
 La moyenne generale de la filière GI1           : 17.08/20
+Le nombre des étudiants dans la filière GI1           : 8
+Le nombre des étudiants qui ont validée l'année       : 8/8
+Le nombre des étudiants qui n'ont pas validée l'année : 0/8
+Taux de validation: 100%

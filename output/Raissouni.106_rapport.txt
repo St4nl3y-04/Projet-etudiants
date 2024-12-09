@@ -2,18 +2,19 @@ identifiant: 106
 nom:         Raissouni 
 prenom:      Aya 
 age:         19 
-Theorie des Graphes et Recherche Operationnelle: 15.00 
-Architecture des Ordinateurs & Assembleur      : 17.00 
-Base des Donnees Relationnelles                : 18.00 
-Reseaux Informatiques                          : 12.00 
-Structure de Donnees en C                      : 15.00 
-Langues etrangeres 1                           : 14.00 
-Digital Skills                                 : 1.00 
-Systemes d'Exploitation et Linux               : 18.00 
-Modelisation Oriente Objet                     : 20.00 
-Theories des Langages et Compilation           : 20.00 
-Developpement Web                              : 19.00 
-Programmation Oriente Objet Java               : 20.00 
-Langues etrangeres 2                           : 17.00 
-Culture & Arts & Sport Skills                  : 18.00 
-moyenne generale                               : 16.00 
+Theorie des Graphes et Recherche Operationnelle: 15.00/20 
+Architecture des Ordinateurs & Assembleur      : 17.00/20 
+Base des Donnees Relationnelles                : 18.00/20 
+Reseaux Informatiques                          : 12.00/20 
+Structure de Donnees en C                      : 15.00/20 
+Langues etrangeres 1                           : 14.00/20 
+Digital Skills                                 : 1.00/20 
+Systemes d'Exploitation et Linux               : 18.00/20 
+Modelisation Oriente Objet                     : 20.00/20 
+Theories des Langages et Compilation           : 20.00/20 
+Developpement Web                              : 19.00/20 
+Programmation Oriente Objet Java               : 20.00/20 
+Langues etrangeres 2                           : 17.00/20 
+Culture & Arts & Sport Skills                  : 18.00/20 
+moyenne generale                               : 16.00/20 
+Année validée.
