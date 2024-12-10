@@ -1,0 +1,21 @@
+<=================== Rapport Académique ===================>
+Les moyennes generaux de chaque Module:
+Theorie des Graphes et Recherche Operationnelle : 18.38/20
+Architecture des Ordinateurs & Assembleur       : 17.13/20
+Base des Donnees Relationnelles                 : 17.88/20
+Reseaux Informatiques                           : 18.38/20
+Structure de Donnees en C                       : 17.13/20
+Langues etrangeres 1                            : 17.13/20
+Digital Skills                                  : 16.75/20
+Systemes d'Exploitation et Linux                : 17.13/20
+Modelisation Oriente Objet                      : 17.13/20
+Theories des Langages et Compilation            : 16.63/20
+Developpement Web                               : 14.50/20
+Programmation Oriente Objet Java                : 16.88/20
+Langues etrangeres 2                            : 18.25/20
+Culture & Arts & Sport Skills                   : 16.63/20
+La moyenne generale de la filière GI1           : 17.13/20
+Le nombre des étudiants dans la filière GI1           : 8
+Le nombre des étudiants qui ont validée l'année       : 8/8
+Le nombre des étudiants qui n'ont pas validée l'année : 0/8
+Taux de validation: 100%

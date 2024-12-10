@@ -286,7 +286,7 @@ int* Recherche_et_Affichage_des_Informations_nom(Liste* li,int *nbt) {
             i++;
         courant=courant->suivant;}
         if (!found){
-            printf("l'etu n existe pas dans la base");
+            printf("l'etudiant n'existe pas dans la base");
             return NULL;
         }
 return pos;
@@ -328,7 +328,7 @@ int Recherche_et_Affichage_des_Informations_identifiant(Liste* li) {
             courant=courant->suivant;  
         }
         if(!found){
-            printf("l etu n existe pas dans la base");
+            printf(RED"l etudiant n'existe pas dans la base"RESET);
             return 0;
             }
     return pos;
@@ -345,7 +345,7 @@ void afficher_menu_modifier(EtudiantRepere*p) {
         printf("%d. Modifier la note %s\n", 5+i, p->note[i].libelle);
     }
     printf("19. Retour au menu principal\n");
-    printf("\n<===================Menu Modification===================>\n"RESET);
+    printf("<===================Menu Modification===================>\n"RESET);
 }
 void modifier_infor(Liste *li, int positions){
     int l;
